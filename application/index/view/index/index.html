@@ -1,0 +1,59 @@
+{include file="common/head" /}
+	<title>{$option['siteTitle']}</title>
+</head>
+<body>
+	<!-- 图片轮播 -->
+	<div id="dm-container">
+		<div data-am-widget="slider" class="am-slider am-slider-a5" data-am-slider='{&quot;directionNav&quot;:false}' >
+			<ul class="am-slides carousel">
+				{for start="0" end="count($carImg)"comparison="<" step="1" name="i"}
+				<li>
+					<img src="{$carImg[$i]}">
+				</li>
+				{/for}
+			</ul>
+		</div>
+
+		<div class="id-box">
+			<div class="am-g">
+				{for start="0" end="9" comparison="<" step="1" name="i"}
+				<div class="am-u-sm-4">
+					<a href="{$conf[$i]['href']}">
+						<div class="id-item">
+							<i class="fa {$conf[$i]['icon']}"></i>
+							<div>{$conf[$i]['title']}</div>
+						</div>
+					</a>
+				</div>
+				{/for}
+			</div>
+		</div>
+	</div>
+	{include file="common/footer"/}
+	<script src="{:config('site_root')}/public/plugins/layer/layer.js"></script>
+	<script type="text/javascript">
+		$('.carousel img').height($('.carousel').width()/2 + 'px');
+
+		function alertImg(url){
+			var ele;
+			if($('#hover-box').length === 0){
+				ele = document.createElement('div');
+				$(ele).attr('id', 'hover-box');
+				ele.style.cssText = 'display:table;background-color:rgba(0,0,0,0.8);text-align:center;vertical-align:middle;width:'+$(window).width()+'px;height:'+$(window).height()+'px;position:fixed;top:0px;left:0px;';
+				$('body').append(ele);
+				$(ele).bind('click', function(){
+					$('#dm-container').attr('class', '');
+
+					$('#hover-box').html('');
+					$('#hover-box').hide();
+				})
+			}else{
+				ele = $('#hover-box')[0];
+				$(ele).show();
+			}
+			ele.innerHTML = '<span style="display:table-cell;position:relative;vertical-align:middle;"><img alt="" src="' + url + '" style="max-width:100%;max-height:100%;"></img></span>';
+			$('#dm-container').attr('class', 'blur');
+		}
+	</script>
+</body>
+</html>
