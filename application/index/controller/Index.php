@@ -11,11 +11,13 @@ class Index extends Controller{
 	}
 
 	public function description(){
+		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		return $this->fetch();
 	}
 
 	public function query_domi(){
-		return $this->buildInfo();
+		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
+		return $this->fetch();
 	}
 
 	private function buildInfo(){
