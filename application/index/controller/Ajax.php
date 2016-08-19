@@ -5,7 +5,15 @@ use think\Db;
 
 class Ajax extends Controller{
 	public function index(){
+		if(input('post.func') === 'query_domi'){
+			return $this->query_domi();
+		}else if(input('post.func') === 'query_stu_info'){
+			return $this->query_stu_info();
+		}
+		return 'error request';
+	}
 
+	private function query_domi(){
 		$out = Db::query('SELECT `id` as `stu_id`,`name` as `stu_name`, `academy` as `stu_academy`, `class` as `stu_class`, `domi_num` as `stu_domiNum` FROM `stu_info` WHERE `name` = ? OR `id` = ?', [input('post.stu_info'), intval(input('post.stu_info'))]);
 		for($i=0,$cnt=count($out); $i<$cnt; $i++){
 			$t = Db::query('SELECT `name` as `stu_name` FROM `stu_info` WHERE `domi_num` = ?', [$out[$i]['stu_domiNum']]);
@@ -15,6 +23,11 @@ class Ajax extends Controller{
 					$out[$i]['domi_mate'][] = $t[$j]['stu_name'];
 			}
 		}
+		return $out;
+	}
+
+	private function query_stu_info(){
+		$out = Db::query('SELECT `id` as `stu_id`,`name` as `stu_name`, `academy` as `stu_academy`, `class` as `stu_class` FROM `stu_info` WHERE `exm_id` = ? LIMIT 1', [input('post.stu_info')]);
 		return $out;
 	}
 }

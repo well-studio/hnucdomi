@@ -77,22 +77,21 @@ class Index extends Controller {
 			$highestRow = $st->getHighestRow(); // 取得总行数
 			$highestColumm = $st->getHighestColumn(); // 取得总列数
 			$highestColumm= \PHPExcel_Cell::columnIndexFromString($highestColumm);
-			$k = [];
-			$hd = [];
-			$row = 1;
-			for ($column = 0; $column < $highestColumm; $column++) {//列数是以第0列开始
-				$hd[] = $st->getCellByColumnAndRow($column, $row)->getValue();
+			if($highestColumm !== 6){
+				var_dump($highestColumm);
+				return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin');
 			}
 
+			$k = [];
 			for ($row = 2; $row <= $highestRow; $row++){//行数是以第1行开始
 				$r = [];
-				for ($column = 0; $column < $highestColumm; $column++) {//列数是以第0列开始
-					$r[$hd[$column]] = $st->getCellByColumnAndRow($column, $row)->getValue();
+				for ($column = 0; $column < 6; $column++) {//列数是以第0列开始
+					$r[] = $st->getCellByColumnAndRow($column, $row)->getValue();
 				}
 				$k[] = $r;
 			}
 			foreach ($k as $v) {
-				Db::execute('INSERT INTO `stu_info`(`id`, `name`, `academy`, `class`, `domi_num`) VALUES(?,?,?,?,?) ON duplicate key UPDATE `name` = VALUES(`name`), `academy` = VALUES(`academy`), `class` = VALUES(`class`), `domi_num` = `domi_num`+VALUES(`domi_num`)', [$v['#'], $v['name'], $v['academy'], $v['class'], $v['domitory']]);
+				Db::execute('INSERT INTO `stu_info`(`exm_id`,`id`, `name`, `academy`, `class`, `domi_num`) VALUES(?,?,?,?,?,?) ON duplicate key UPDATE `exm_id` = values(`exm_id`), `name` = VALUES(`name`), `academy` = VALUES(`academy`), `class` = VALUES(`class`), `domi_num` = `domi_num`+VALUES(`domi_num`)', [$v[0], $v[1], $v[2], $v[3], $v[4], $v[5]]);
 			}
 		}
 		return $this->success('上传成功', config('site_root').'/admin');

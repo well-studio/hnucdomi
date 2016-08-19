@@ -19,6 +19,7 @@ return [
     ],*/
     'description' => 'index/index/description',
     'query_domi' => 'index/index/query_domi',
+    'query_stu_info' => 'index/index/query_stu_info',
     'map' => 'index/index/map',
     'guide' => 'index/index/guide',
     'group' => 'index/index/group',
