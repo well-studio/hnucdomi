@@ -1,11 +1,11 @@
 {include file="common/head" /}
-<link rel="stylesheet" href="{:Config('site_root')}/public/plugins/weui/weui.css">
+<link rel="stylesheet" href="{:config('site_root')}/public/plugins/weui/weui.css">
 <title>新生信息查询</title>
 </head>
 <body class="bd">
 	<!-- header -->
 	<div class="hd">
-		<h1 class="page_title">新生信息查询</h1>
+		<a href="javascript:alertImg('{:config('site_root')}/public/images/qrcode.jpg');"><img alt="湖商学工在线" src="{:config('site_root')}/public/images/qrcode.jpg" style="max-height:50px; max-width:50px; float:left; margin-left:30px"><h1 class="page_title">新生信息查询</h1></a>
 	</div>
 
 
@@ -79,7 +79,6 @@
 									<input type="text" class="weui_input" id="stu_id" value="' + data.stu_id + '" disabled="disabled">\
 								</div>\
 							</div>\
-							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
 									<label for="stu_name" class="weui_label">姓名</label>\
@@ -88,7 +87,6 @@
 									<input type="text" class="weui_input" id="stu_name" value="' + data.stu_name + '" disabled="disabled">\
 								</div>\
 							</div>\
-							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
 									<label for="stu_academy" class="weui_label">学院</label>\
@@ -97,7 +95,14 @@
 									<input type="text" class="weui_input" id="stu_academy" value="' + data.stu_academy + '" disabled="disabled">\
 								</div>\
 							</div>\
-							\
+							<div class="weui_cell">\
+								<div class="weui_cell_hd">\
+									<label for="stu_major" class="weui_label">专业</label>\
+								</div>\
+								<div class="weui_cell_bd weui_cell_primary">\
+									<input type="text" class="weui_input" id="stu_major" value="' + data.stu_major + '" disabled="disabled">\
+								</div>\
+							</div>\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
 									<label for="stu_class" class="weui_label">班级</label>\
@@ -106,7 +111,9 @@
 									<input type="text" class="weui_input" id="stu_class" value="' + data.stu_class + '" disabled="disabled">\
 								</div>\
 							</div>\
-							\
+							<div class="weui_cell" style="font-size:14px; color: #999">\
+								'+ data.stu_note +'\
+							</div>\
 						</div>\
 					');
 				}else if(_data.length === 0){
@@ -120,7 +127,6 @@
 				console.log('err');
 			}
 		});
-
 		return false;
 	});
 </script>

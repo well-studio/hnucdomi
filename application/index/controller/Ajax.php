@@ -2,9 +2,16 @@
 namespace app\index\controller;
 use think\Controller;
 use think\Db;
+use think\Request;
+use think\Session;
 
 class Ajax extends Controller{
 	public function index(){
+		if(!preg_match('/^http:\/\/'.config('domain').'/', $_SERVER["HTTP_REFERER"]) ||
+			Session::get('anti_spider') !== '(｀･ω･´)' ||
+			!Request::instance()->isMobile()) {
+			return 'error request';
+		}
 		if(input('post.func') === 'query_domi'){
 			return $this->query_domi();
 		}else if(input('post.func') === 'query_stu_info'){
@@ -27,7 +34,7 @@ class Ajax extends Controller{
 	}
 
 	private function query_stu_info(){
-		$out = Db::query('SELECT `id` as `stu_id`,`name` as `stu_name`, `academy` as `stu_academy`, `class` as `stu_class` FROM `stu_info` WHERE `exm_id` = ? LIMIT 1', [input('post.stu_info')]);
+		$out = Db::query('SELECT `id` as `stu_id`,`name` as `stu_name`, `academy` as `stu_academy`, `major` as `stu_major`, `class` as `stu_class`, `note` as `stu_note` FROM `stu_info` WHERE `exm_id` = ? LIMIT 1', [input('post.stu_info')]);
 		return $out;
 	}
 }

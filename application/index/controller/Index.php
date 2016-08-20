@@ -2,6 +2,8 @@
 namespace app\index\controller;
 use think\Controller;
 use think\Request;
+use think\Session;
+
 class Index extends Controller{
 	public function index(){
 
@@ -17,6 +19,7 @@ class Index extends Controller{
 
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 
+		Session::set('anti_spider', '(｀･ω･´)');
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		return $this->fetch();
 	}
@@ -25,6 +28,7 @@ class Index extends Controller{
 
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 
+		Session::set('anti_spider', '(｀･ω･´)');
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		return $this->fetch();
 	}

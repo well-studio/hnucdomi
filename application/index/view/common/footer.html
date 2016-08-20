@@ -14,4 +14,23 @@
 			var s = document.getElementsByTagName("script")[0];
 			s.parentNode.insertBefore(hm, s);
 		})();
+		function alertImg(url){
+			var ele;
+			if($('#hover-box').length === 0){
+				ele = document.createElement('div');
+				$(ele).attr('id', 'hover-box');
+				ele.style.cssText = 'display:table;background-color:rgba(0,0,0,0.8);text-align:center;vertical-align:middle;width:'+$(document).width()+'px;height:'+$(document).height()+'px;position:absolute;top:0px;left:0px;';
+				$('body').append(ele);
+				$(ele).bind('click', function(){
+					$('#dm-container').attr('class', '');
+					$('#hover-box').html('');
+					$('#hover-box').hide();
+				})
+			}else{
+				ele = $('#hover-box')[0];
+				$(ele).show();
+			}
+			ele.innerHTML = '<span style="display:table-cell;position:relative;vertical-align:middle;"><img alt="" id="hoverimg" src="' + url + '" style="max-width:100%;max-height:100%;"></img></span>';
+			$('#dm-container').attr('class', 'blur');
+		}
 	</script>

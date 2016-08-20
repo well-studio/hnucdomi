@@ -62,8 +62,8 @@ class Index extends Controller {
 			$this->redirect('admin/u/login');
 		}
 
-		if(preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'], $res)){
-			vendor('Excel.PHPExcel.IOFactory');
+		if(preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'])){
+			/*vendor('Excel.PHPExcel.IOFactory');
 			$reader = null;
 			if($res[1] === '.xls'){
 				$reader = \PHPExcel_IOFactory::createReader('Excel5');
@@ -77,22 +77,61 @@ class Index extends Controller {
 			$highestRow = $st->getHighestRow(); // 取得总行数
 			$highestColumm = $st->getHighestColumn(); // 取得总列数
 			$highestColumm= \PHPExcel_Cell::columnIndexFromString($highestColumm);
-			if($highestColumm !== 6){
-				var_dump($highestColumm);
+			if($highestColumm !== 8){
 				return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin');
 			}
 
 			$k = [];
 			for ($row = 2; $row <= $highestRow; $row++){//行数是以第1行开始
 				$r = [];
-				for ($column = 0; $column < 6; $column++) {//列数是以第0列开始
+				for ($column = 0; $column < $highestColumm; $column++) {//列数是以第0列开始
 					$r[] = $st->getCellByColumnAndRow($column, $row)->getValue();
 				}
 				$k[] = $r;
-			}
-			foreach ($k as $v) {
-				Db::execute('INSERT INTO `stu_info`(`exm_id`,`id`, `name`, `academy`, `class`, `domi_num`) VALUES(?,?,?,?,?,?) ON duplicate key UPDATE `exm_id` = values(`exm_id`), `name` = VALUES(`name`), `academy` = VALUES(`academy`), `class` = VALUES(`class`), `domi_num` = `domi_num`+VALUES(`domi_num`)', [$v[0], $v[1], $v[2], $v[3], $v[4], $v[5]]);
-			}
+			}*/
+/*			foreach ($k as $v) {
+				Db::execute('INSERT INTO `stu_info`(`exm_id`,`id`, `name`, `academy`, `major`, `class`, `domi_num`, `note`) VALUES(?,?,?,?,?,?,?,?) ON duplicate key UPDATE `exm_id` = VALUES(`exm_id`), `name` = VALUES(`name`), `academy` = VALUES(`academy`), `major` = VALUES(`major`), `class` = VALUES(`class`), `domi_num` = VALUES(`domi_num`), `note` = VALUES(`note`)', [$v[0], $v[1], $v[2], $v[3], $v[4], $v[5], $v[6], $v[7]]);
+			}*/
+			// Db::transaction(function(){
+				preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'], $res);
+				vendor('Excel.PHPExcel.IOFactory');
+				$reader = null;
+				if($res[1] === '.xls'){
+					$reader = \PHPExcel_IOFactory::createReader('Excel5');
+				}else{
+					$reader = \PHPExcel_IOFactory::createReader('Excel2007');
+				}
+				$ex = $reader->load($_FILES['file']['tmp_name']);
+				$st = $ex->getSheet(0);
+
+
+				$highestRow = $st->getHighestRow(); // 取得总行数
+				$highestColumm = $st->getHighestColumn(); // 取得总列数
+				$highestColumm= \PHPExcel_Cell::columnIndexFromString($highestColumm);
+				if($highestColumm !== 8){
+					return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin');
+				}else if($highestRow > 1001){
+					return $this->error('单次上传数据不得超过1000条', config('site_root').'/admin');
+				}
+
+				$k = [];
+				for ($row = 2; $row <= $highestRow; $row++){//行数是以第1行开始
+				/*	$r = [];
+					for ($column = 0; $column < $highestColumm; $column++) {//列数是以第0列开始
+						$r[] = $st->getCellByColumnAndRow($column, $row)->getValue();
+					}*/
+					$r['exm_id']   = floatval($st->getCellByColumnAndRow(0, $row)->getValue());
+					$r['id']       = floatval($st->getCellByColumnAndRow(1, $row)->getValue());
+					$r['name']     = $st->getCellByColumnAndRow(2, $row)->getValue();
+					$r['academy']  = $st->getCellByColumnAndRow(3, $row)->getValue();
+					$r['major']    = $st->getCellByColumnAndRow(4, $row)->getValue();
+					$r['class']    = $st->getCellByColumnAndRow(5, $row)->getValue();
+					$r['domi_num'] = $st->getCellByColumnAndRow(6, $row)->getValue();
+					$r['note']     = $st->getCellByColumnAndRow(7, $row)->getValue();
+					$k[] = $r;
+				}
+				Db::table('stu_info')->insertAll($k);
+			// });
 		}
 		return $this->success('上传成功', config('site_root').'/admin');
 	}
