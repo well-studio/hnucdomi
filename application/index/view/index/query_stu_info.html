@@ -9,7 +9,7 @@
 	</div>
 
 
-	<div class="weui_cells_title">请输入考生号进行查询</div>
+	<div class="weui_cells_title">请输入考生号(14位,湖南省的为1643开头)进行查询</div>
 	<form class="weui_cells weui_cells_form" action="{:Config('site_root')}/ajax" method="post">
 		<div class="weui_cell">
 			<div class="weui_cell_hd">
@@ -55,8 +55,11 @@
 	$('form').submit(function(){
 
 		/* 显示加载中按钮 */
+		if(!$('#stu_info').val().match(/\d{14}/)){
+			layer.msg('信息有误');
+			return false;
+		}
 		$('#loadingToast').show();
-
 		$.ajax({
 			url: '{:config('site_root')}/ajax',
 			type: 'post',

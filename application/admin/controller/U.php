@@ -22,6 +22,7 @@ class U extends Controller {
 			case 'login': return $this->ajaxLogin(); break;
 			case 'delDataTable': return $this->ajaxDelDataTable(); break;
 			case 'delImg' :return $this->ajaxDelImg(); break;
+			case 'queryClass' : return $this->ajaxQueryClass(); break;
 		}
 	}
 
@@ -96,5 +97,16 @@ class U extends Controller {
 
 	private function checkPassword(){
 		return md5(input('post.pass').'hnucdomi') === require(__DIR__.'/../../../config/password.php');
+	}
+
+	private function ajaxQueryClass(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/U/login');
+		}
+		if(!input('post.name')){
+			return ['err'=>1, 'msg'=>'error request'];
+		}
+		$c = Db::query('SELECT * FROM `stu_info` WHERE `class` = ?', [input('post.name')]);
+		return $c;
 	}
 }

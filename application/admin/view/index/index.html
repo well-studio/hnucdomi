@@ -9,11 +9,20 @@
 			<input id="file" type="file" name="file" accept="application/vnd.ms-excel,.xlsx">
 			<div id="file-list"></div>
 			<button type="submit" id="uplbtn" class="am-btn am-btn-primary am-btn-sm" disabled="disabled">上传</button>
-			<p>xls/xlsx文件，2M以内，可多次上传，模板文件下载：<a href="{:config('site_root')}/public/template.xlsx">template.xlsx</a></p>
+			<p>xls/xlsx文件，2M以内，单个文件不得超过1001行，可多次上传，模板文件下载：<a href="{:config('site_root')}/public/template.xlsx">template.xlsx</a></p>
 		</form>
 		<button class="am-btn am-btn-danger am-btn-sm" onclick="del();">清空数据库</button>
 		<hr>
 
+
+		<h1>班级学生查询</h1>
+		{foreach name="class" key="key" item="value"}
+			<button class="am-btn am-btn-sm am-btn-default" style="margin-top:5px" onclick="query_class('{$value['class']}')">{$value['class']}</button>
+		{/foreach}
+		<div id="am-class-name-fields"></div>
+
+
+		<hr>
 
 		<h1>首页定制</h1>
 		<form class="am-form" action="{:config('site_root')}/admin/u/changeOptions" method="post">
@@ -77,7 +86,6 @@
 			</div>
 		{/for}
 		<hr>
-
 
 		<h1>修改密码</h1>
 		<form class="am-form" action="{:config('site_root')}/admin/u/changePass" method="post">
@@ -151,6 +159,39 @@
 					},750);
 				}
 			});
+		}
+		function query_class(className){
+			$('#am-class-name-fields').html('<i class="fa fa-spinner fa-spin"></i>');
+			$.ajax({
+				url: '{:config('site_root')}/admin/u/ajax',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					func: 'queryClass',
+					name: className
+				},
+				success: function(data){
+					if(data.length == 0) return;
+					var row = '<tr>';
+					for(key in data[0]){
+						if(key === 'note') continue;
+						row += '<th>'+key+'</th>'
+					}
+					row += '</tr>'
+					for(var i=0; i<data.length; i++){
+						row += '<tr>';
+						for(var key in data[i]){
+							if(key === 'note') continue;
+							row += '<td>'+data[i][key]+'</td>'
+						}
+						row += '</tr>'
+					}
+					$('#am-class-name-fields').html('<table class="am-table">'+row+'</table>');
+				},
+				error: function(){
+					layer.msg('未知错误');
+				}
+			})
 		}
 	</script>
 </body>
