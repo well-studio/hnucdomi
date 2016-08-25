@@ -59,6 +59,35 @@ class U extends Controller {
 		}
 	}
 
+	public function changeImageVideoList(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/U/login');
+		}
+		$pst = input('post.');
+		$arr = [];
+		for($i=0, $len=count($pst['image']); $i<$len; $i++){
+			if(
+				empty($pst['image'][$i])||
+				empty($pst['type'][$i])||
+				empty($pst['title'][$i])||
+				empty($pst['description'][$i])||
+				empty($pst['href'][$i])
+			) continue;
+			$arr[] = [
+				'image'       => $pst['image'][$i],
+				'type'        => $pst['type'][$i],
+				'title'       => $pst['title'][$i],
+				'description' => $pst['description'][$i],
+				'href'        => $pst['href'][$i],
+			];
+		}
+		if(file_put_contents(__DIR__.'/../../../config/img_video.conf', json_encode($arr))){
+			return $this->success('修改成功', config('site_root').'/admin');
+		}else{
+			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+		}
+	}
+
 	public function changeOptions(){
 		if(Session::get('admin') !== 'zzliux'){
 			$this->redirect('admin/U/login');

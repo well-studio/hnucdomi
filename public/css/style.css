@@ -78,7 +78,9 @@ a {
 .item-box a+a {
 	border-top: 1px solid #eee;
 }
-
+.item-box a:hover{
+	background: #eee;
+}
 .carousel img {
 	width: 100%;
 }

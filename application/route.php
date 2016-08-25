@@ -25,6 +25,7 @@ return [
     'group' => 'index/index/group',
     'experience' => 'index/index/experience',
 
-    'ajax' => 'index/ajax/index'
+    'ajax' => 'index/ajax/index',
+    'list' => 'index/index/list_'
 
 ];

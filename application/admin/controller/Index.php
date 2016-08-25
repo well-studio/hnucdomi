@@ -38,7 +38,10 @@ class Index extends Controller {
 		$c = Db::query('SELECT DISTINCT `class` FROM `stu_info`');
 		$this->assign('class', $c);
 
-		return $this->fetch();;
+		//获取图片/视频配置信息
+		$this->assign('items', json_decode(file_get_contents(__DIR__.'/../../../config/img_video.conf'), true));
+
+		return $this->fetch();
 	}
 
 	public function changeIndex(){

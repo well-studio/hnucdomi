@@ -1,0 +1,27 @@
+{include file="common/head" /}
+<title>图片/视频列表</title>
+</head>
+<body>
+
+	<div class="item-box">
+		{foreach $items as $val}
+		<a class="item" href="{$val.href}">
+			<div class="img-box">
+				<img src="{$val.image}">
+			</div>
+			<div class="item-content">
+				<h2 class="item-title"><span class="am-badge am-badge-{php}if($val['type'] === 'image') echo 'secondary'; else echo 'success'; {/php} am-radius">{php}if($val['type'] === 'image') echo '图片'; else echo '视频'; {/php}</span> &nbsp;{$val.title}</h2>
+				<p class="item-description">{$val.description}</p>
+			</div>
+		</a>
+		{/foreach}
+	</div>
+	{include file="common/footer" /}
+<script>
+$('a').bind('click', function(event){
+	parent.location = this.href;
+	return false;
+});
+</script>
+</body>
+</html>

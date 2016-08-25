@@ -6,7 +6,6 @@ use think\Session;
 
 class Index extends Controller{
 	public function index(){
-
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 
 		$this->assign('conf', json_decode(file_get_contents(__DIR__.'/../../../config/index.conf'), true));
@@ -16,7 +15,6 @@ class Index extends Controller{
 	}
 
 	public function query_stu_info(){
-
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 
 		Session::set('anti_spider', '(｀･ω･´)');
@@ -25,12 +23,21 @@ class Index extends Controller{
 	}
 
 	public function query_domi(){
-
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 
 		Session::set('anti_spider', '(｀･ω･´)');
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		return $this->fetch();
+	}
+
+	//list的函数名竟然不能用。。
+	public function list_(){
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
+
+		Session::set('anti_spider', '(｀･ω･´)');
+		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
+		$this->assign('items', json_decode(file_get_contents(__DIR__.'/../../../config/img_video.conf'), true));
+		return $this->fetch('list');
 	}
 
 	private function buildInfo(){

@@ -1,10 +1,12 @@
 ### 安装
-* 将config/stu_info.sql导入进mysql
-* 在application/config.php配置相关信息
-* 将整个目录设置为777权限(chmod -R 0777 hnucdomi)
+- 将config/stu_info.sql导入进mysql
+- 在application/config.php配置相关信息
+- 将整个目录设置为777权限(chmod -R 0777 hnucdomi)
 
 ### admin
 初始密码为空，进入后台后可修改密码
+
+##### 班级学生查询
 
 ##### 宿舍查询的数据的导入
 使用xls/xlsx格式的excel文档，表格文档不允许超过6列，  

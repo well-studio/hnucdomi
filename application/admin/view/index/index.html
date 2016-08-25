@@ -4,6 +4,9 @@
 </head>
 <body>
 	<div class="am-u-sm-offset-3 am-u-sm-6 ad-upload-box">
+		<h1>信息</h1>
+		<p>微信客户端中x5浏览器中的本地缓存比较久，若要使用微信查看修改效果请使用微信进入 dubugx5.qq.com 代理下面的最下面的位置清楚文件缓存就ok了</p>
+		<hr>
 		<h1>数据上传，目前数据条数:{$stu_num}</h1>
 		<form method="post" action="{:config('site_root')}/admin/index/fileUpload" enctype="multipart/form-data">
 			<input id="file" type="file" name="file" accept="application/vnd.ms-excel,.xlsx">
@@ -69,9 +72,33 @@
 			</div>
 		</form>
 		<hr>
+		<h1>图片/视频列表管理(若有某行有数据为空,则该行不被记录)</h1>
+		<form class="am-form" method="post" action="{:config('site_root')}/admin/u/changeImageVideoList">
+			<table style="width:100%" id="image_video_table">
+				<tr>
+					<th>图片地址</th>
+					<th>类型</th>
+					<th>标题</th>
+					<th>描述</th>
+					<th>地址</th>
+				</tr>
+				{foreach $items as $val}
+				<tr>
+					<td><input type="text" name="image[]" class="am-form-field am-radius" value="{$val.image}"></td>
+					<td><select name="type[]" class="am-form-field am-radius"><option value="image" {php}if($val['type']==='image') echo 'selected';{/php}>图片</option><option value="video" {php}if($val['type']==='video') echo 'selected';{/php}>视频</option></select></td>
+					<td><input type="text" name="title[]" class="am-form-field am-radius" value="{$val.title}"></td>
+					<td><input type="text" name="description[]" class="am-form-field am-radius" value="{$val.description}"></td>
+					<td><input type="text" name="href[]" class="am-form-field am-radius" value="{$val.href}"></td>
+				</tr>
+				{/foreach}
+			</table>
+			<span onclick="addARowInImageVideoForm()" class="am-btn am-btn-primary">添加</span>
+			<input type="submit" class="am-btn am-btn-primary" value="提交修改">
+		</form>
 
 
 
+		<hr>
 		<h1>图片管理(右键图片复制地址, 图片名称不允许有中文字符)</h1>
 		<form method="post" action="{:config('site_root')}/admin/index/imageUpload" enctype="multipart/form-data">
 			<input id="imgFile" type="file" name="imageFile" accept=".png,.jpg,.gif">
@@ -192,6 +219,15 @@
 					layer.msg('未知错误');
 				}
 			})
+		}
+		function addARowInImageVideoForm(){
+			$('#image_video_table').append('<tr>\
+					<td><input type="text" name="image[]" class="am-form-field am-radius"></td>\
+					<td><select name="type[]" class="am-form-field am-radius"><option value="image" >图片</option><option value="video">视频</option></select></td>\
+					<td><input type="text" name="title[]" class="am-form-field am-radius"></td>\
+					<td><input type="text" name="description[]" class="am-form-field am-radius"></td>\
+					<td><input type="text" name="href[]" class="am-form-field am-radius"></td>\
+				</tr>');
 		}
 	</script>
 </body>
