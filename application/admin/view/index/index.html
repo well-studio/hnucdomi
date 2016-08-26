@@ -6,6 +6,8 @@
 	<div class="am-u-sm-offset-3 am-u-sm-6 ad-upload-box">
 		<h1>信息</h1>
 		<p>微信客户端中x5浏览器中的本地缓存比较久，若要使用微信查看修改效果请使用微信进入 dubugx5.qq.com 代理下面的最下面的位置清楚文件缓存就ok了</p>
+		<p>使用cdn的同学请注意，因为cdn缓存更新较慢，如果上传图片图片名相同的话会覆盖之前的图片，但是在cdn下面更新会很慢，建议使用新的文件名</p>
+		<p>管理员避免使用危险字符，比如&lt;与&gt;,应改为&amp;lt;与&amp;gt; 部分情况下需要使用script,所以不做htmlspecialchars</p>
 		<hr>
 		<h1>数据上传，目前数据条数:{$stu_num}</h1>
 		<form method="post" action="{:config('site_root')}/admin/index/fileUpload" enctype="multipart/form-data">
