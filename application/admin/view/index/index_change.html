@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="common/head"}
+  <title>后台管理</title>
+</head>
+<body>
+
+  {include file="common/nav"}
+
+
+  <div class="am-cf admin-main">
+    {include file="common/sidebar"}
+    <div class="admin-content">
+      <div class="admin-content-body">
+        <div class="am-cf am-padding">
+          <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 首页定制 </strong></div>
+        </div>
+
+
+        <div class="am-g">
+          <div class="am-u-lg-6">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">首页配置项</div>
+              <div class="am-panel-bd">
+                <form class="am-form" action="{:config('site_root')}/admin/u/changeOptions" method="post">
+                  {foreach name="option" item="value" key="key"}
+                  <div class="am-form-group">
+                    <label for="lb_{$key}">{$key}</label>
+                    <input type="text" id="lb_{$key}" name="{$key}" value="{$value}" autocomplete="off">
+                  </div>
+                  {/foreach}
+                  <div class="am-form-group">
+                    <input type="submit" class="am-btn am-btn-primary an-" value="提交">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="am-u-lg-6">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">首页轮播图<small>(多个图使用换行分割)</small></div>
+              <div class="am-panel-bd">
+                <form class="am-form" action="{:config('site_root')}/admin/u/changeCarousel" method="post">
+                  <div class="am-form-group">
+                    <textarea rows="5" id="changeCarousel" name="carouselUrls">{$carImgStr}</textarea>
+                  </div>
+                  <input type="submit" class="am-btn am-btn-primary an-" value="提交">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-sm-12">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">首页按钮</div>
+              <div class="am-panel-bd">
+                <form action="{:config('site_root')}/admin/index/changeIndex" method="post">
+                  <table style="width:100%">
+                    <tr>
+                      <th width="20%">TITLE</th>
+                      <th width="20%"><a href="http://fontawesome.io/icons/" target="_blank">ICON CLASS</a></th>
+                      <th width="60%">HREF</th>
+                    </tr>
+                    {for start="0" end="9" comparison="<" step="1" name="i"}
+                    <tr>
+                      <td><input type="text" name="title[]" class="am-form-field am-radius" value="{$conf[$i]['title']}"></td>
+                      <td><input type="text" name="icon[]" class="am-form-field am-radius" value="{$conf[$i]['icon']}"></td>
+                      <td><input type="text" name="href[]" class="am-form-field am-radius" value="{$conf[$i]['href']}"></td>
+                    </tr>
+                    {/for}
+                  </table>
+                  <br>
+                  <input type="submit" class="am-btn am-btn-primary" value="提交">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="am-footer am-footer-default">
+        <div class="am-footer-miscs">
+          <p>由维尔创业工作室提供技术支持</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+  {include file="common/footer"/}
+</body>
+</html>

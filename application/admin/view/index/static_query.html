@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="common/head"}
+  <title>后台管理</title>
+</head>
+<body>
+
+  {include file="common/nav"}
+
+
+  <div class="am-cf admin-main">
+    {include file="common/sidebar"}
+    <div class="admin-content">
+      <div class="admin-content-body">
+        <div class="am-cf am-padding">
+          <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 班级学生查询 </strong></div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-sm-12">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">通过班级查询学生信息</div>
+              <div class="am-panel-bd">
+                {foreach name="class" key="key" item="value"}
+                <button class="am-btn am-btn-sm am-btn-default" style="margin-top:5px" onclick="query_class('{$value['class']}')">{$value['class']}</button>
+                {/foreach}
+              </div>
+            </div>
+          </div>
+          <div class="am-u-sm-12"><div id="am-class-name-fields" style="height:600px" class="am-scrollable-vertical am-scrollable-horizontal"></div></div>
+        </div>
+      </div>
+      <footer class="am-footer am-footer-default">
+        <div class="am-footer-miscs">
+          <p>由维尔创业工作室提供技术支持</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+  {include file="common/footer"/}
+  <script>
+    function query_class(className){
+      $('#am-class-name-fields').html('<i class="fa fa-spinner fa-spin"></i>');
+      $.ajax({
+        url: '{:config('site_root')}/admin/u/ajax',
+        method: 'post',
+        dataType: 'json',
+        data: {
+          func: 'queryClass',
+          name: className
+        },
+        success: function(data){
+          if(data.length == 0) return;
+          var row = '<thead><tr>';
+          for(key in data[0]){
+            if(key === 'note') continue;
+            row += '<th>'+key.toUpperCase()+'</th>'
+          }
+          row += '</tr></thead>'
+          for(var i=0; i<data.length; i++){
+            row += '<tr>';
+            for(var key in data[i]){
+              if(key === 'note') continue;
+              row += '<td>'+data[i][key]+'</td>';
+            }
+            row += '</tr>'
+          }
+          $('#am-class-name-fields').html('<table class="am-text-nowrap am-table am-table-hover am-table-bd am-table-compact am-table-striped admin-content-table">'+row+'</table>');
+        },
+        error: function(){
+          $('#am-class-name-fields').html('未知错误');
+        }
+      })
+    }
+  </script>
+</body>
+</html>

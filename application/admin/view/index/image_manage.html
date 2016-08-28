@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="common/head"}
+  <title>后台管理</title>
+</head>
+<body>
+
+  {include file="common/nav"}
+
+
+  <div class="am-cf admin-main">
+    {include file="common/sidebar"}
+    <div class="admin-content">
+      <div class="admin-content-body">
+        <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 图片管理 </strong></div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-sm-12">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">图片上传</div>
+              <div class="am-panel-bd">
+                <form method="post" action="{:config('site_root')}/admin/index/imageUpload" enctype="multipart/form-data">
+                	<input id="imgFile" type="file" name="imageFile" accept=".png,.jpg,.gif">
+                	<div id="imgFile-list">&nbsp;</div>
+                	<button type="submit" id="imgUplbtn" class="am-btn am-btn-primary am-btn-sm" disabled="disabled">上传</button>
+                	<p>允许上传png/jpg/gif文件，2M以内</p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-sm-12">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">图片列表<small>(右键复制图片地址)</small></div>
+              <div class="am-panel-bd">
+              {for start="0" end="count($imgNames)" comparison="<" step="1" name="i"}
+                <div class="ad-img-box">
+                  <img src="{:config('site_root')}/public/images/{$imgNames[$i]}" alt="">
+                  <button class="am-btn am-btn-danger am-btn-sm am-btn-block" onclick="delImg('{$imgNames[$i]}')">删除图片</button>
+                </div>
+              {/for}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="am-footer am-footer-default">
+        <div class="am-footer-miscs">
+          <p>由维尔创业工作室提供技术支持</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+  {include file="common/footer"/}
+  <script src="{:config('site_root')}/public/plugins/layer/layer.js"></script>
+  <script>
+    (function(){
+      $('#imgFile').on('change', function() {
+        var file = $('#imgFile')[0].files[0];
+        console.dir(file);imgFile
+        var fileName = '<span class="am-badge">' + file.name + '</span> ';
+        $('#imgFile-list').html(fileName);
+        $('#imgUplbtn').attr('disabled', false);
+      });
+    })();
+    function delImg(imgName){
+      $.ajax({
+        url:'{:config('site_root')}/admin/u/ajax',
+        method: 'post',
+        dataType: 'json',
+        data: {
+          func: 'delImg',
+          name: imgName,
+        },
+        success: function(data){
+          layer.msg(data.msg);
+          setTimeout(function(){
+            history.go(0);
+          },750);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

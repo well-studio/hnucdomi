@@ -9,13 +9,61 @@ class Index extends Controller {
 		if(Session::get('admin') !== 'zzliux'){
 			$this->redirect('admin/u/login');
 		}
+		return $this->fetch();
+	}
+
+
+
+	public function static_upload(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+
+		//获取数据库数据条数
+		$c = Db::query('SELECT count(*) as `count` FROM `stu_info`');
+		$this->assign('stu_num', $c[0]['count']);
+		return $this->fetch();
+	}
+
+	public function static_query(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+
+		//获取班级信息
+		$c = Db::query('SELECT DISTINCT `class` FROM `stu_info`');
+		$this->assign('class', $c);
+		return $this->fetch();
+	}
+
+	public function index_change(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
 
 		//首页按钮配置文件
 		$this->assign('conf', json_decode(file_get_contents(__DIR__.'/../../../config/index.conf'), true));
-
 		//首页配置项
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
+		//首页轮播图地址
+		$this->assign('carImgStr', implode(json_decode(file_get_contents(__DIR__.'/../../../config/carousel.conf'), true), "\n"));
+		return $this->fetch();
+	}
 
+	public function list_change(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+
+		//获取图片/视频配置信息
+		$this->assign('items', json_decode(file_get_contents(__DIR__.'/../../../config/img_video.conf'), true));
+
+		return $this->fetch();
+	}
+	public function image_manage(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
 		//scan图片，以及路径
 		$hd = opendir(__DIR__.'/../../../public/images');
 		$imgArr = [];
@@ -26,20 +74,12 @@ class Index extends Controller {
 		}
 		closedir($hd);
 		$this->assign('imgNames', $imgArr);
-
-		//首页轮播图地址
-		$this->assign('carImgStr', implode(json_decode(file_get_contents(__DIR__.'/../../../config/carousel.conf'), true), "\n"));
-
-		//获取数据库数据条数
-		$c = Db::query('SELECT count(*) as `count` FROM `stu_info`');
-		$this->assign('stu_num', $c[0]['count']);
-
-		//获取班级信息
-		$c = Db::query('SELECT DISTINCT `class` FROM `stu_info`');
-		$this->assign('class', $c);
-
-		//获取图片/视频配置信息
-		$this->assign('items', json_decode(file_get_contents(__DIR__.'/../../../config/img_video.conf'), true));
+		return $this->fetch();
+	}
+	public function password_change(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
 
 		return $this->fetch();
 	}
@@ -59,9 +99,9 @@ class Index extends Controller {
 			];
 		}
 		if(file_put_contents(__DIR__.'/../../../config/index.conf', json_encode($arr))){
-			return $this->success('修改成功', config('site_root').'/admin');
+			return $this->success('修改成功', config('site_root').'/admin/index_change');
 		}else{
-			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/index_change');
 		}
 	}
 
@@ -87,9 +127,9 @@ class Index extends Controller {
 			$highestColumm = $st->getHighestColumn(); // 取得总列数
 			$highestColumm= \PHPExcel_Cell::columnIndexFromString($highestColumm);
 			if($highestColumm !== 8){
-				return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin');
+				return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin/static_upload');
 			}else if($highestRow > 1001){
-				return $this->error('单次上传数据不得超过1000条', config('site_root').'/admin');
+				return $this->error('单次上传数据不得超过1000条', config('site_root').'/admin/static_upload');
 			}
 
 			$k = [];
@@ -107,7 +147,7 @@ class Index extends Controller {
 			}
 			Db::table('stu_info')->insertAll($k);
 		}
-		return $this->success('上传成功', config('site_root').'/admin');
+		return $this->success('上传成功', config('site_root').'/admin/static_upload');
 	}
 
 	public function imageUpload(){
@@ -116,9 +156,9 @@ class Index extends Controller {
 		}
 
 		if(file_put_contents(__DIR__.'/../../../public/images/'.$_FILES['imageFile']['name'], file_get_contents($_FILES['imageFile']['tmp_name']))){
-			return $this->success('上传成功', config('site_root').'/admin');
+			return $this->success('上传成功', config('site_root').'/admin/image_manage');
 		}else{
-			return $this->success('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+			return $this->success('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/image_manage');
 		}
 	}
 }

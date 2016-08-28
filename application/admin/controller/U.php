@@ -31,19 +31,19 @@ class U extends Controller {
 			$this->redirect('admin/U/login');
 		}
 		if(input('post.changePass') !== '123456'){
-			return $this->error('参数非法', config('site_root').'/admin');
+			return $this->error('参数非法');
 		}else if(input('post.newpass') !== input('post.conpass')){
-			return $this->error('确认密码错误', config('site_root').'/admin');
+			return $this->error('确认密码错误');
 		}else{
 			$pass = require(__DIR__.'/../../../config/password.php');
 			if(md5(input('post.oldpass').'hnucdomi') !== $pass){
-				return $this->error('旧密码错误', config('site_root').'/admin');
+				return $this->error('旧密码错误');
 			}
 			$str = '<?php'."\n".'return \''.md5(input('newpass').'hnucdomi').'\';'."\n";
 			if(file_put_contents(__DIR__.'/../../../config/password.php', $str)){
-				return $this->success('密码修改成功', config('site_root').'/admin');
+				return $this->success('密码修改成功', config('site_root').'/admin/password_change');
 			}else{
-				return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+				return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/password_change');
 			}
 		}
 	}
@@ -53,9 +53,9 @@ class U extends Controller {
 			$this->redirect('admin/U/login');
 		}
 		if(file_put_contents(__DIR__.'/../../../config/carousel.conf', json_encode(explode("\n", str_replace("\r\n", "\n", trim(input('post.')['carouselUrls'])))))){
-			return $this->success('修改成功', config('site_root').'/admin');
+			return $this->success('修改成功', config('site_root').'/admin/index_change');
 		}else{
-			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/index_change');
 		}
 	}
 
@@ -82,9 +82,9 @@ class U extends Controller {
 			];
 		}
 		if(file_put_contents(__DIR__.'/../../../config/img_video.conf', json_encode($arr))){
-			return $this->success('修改成功', config('site_root').'/admin');
+			return $this->success('修改成功', config('site_root').'/admin/list_change');
 		}else{
-			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/list_change');
 		}
 	}
 
@@ -93,9 +93,9 @@ class U extends Controller {
 			$this->redirect('admin/U/login');
 		}
 		if(file_put_contents(__DIR__.'/../../../config/option.conf', json_encode(input('post.')))){
-			return $this->success('修改成功', config('site_root').'/admin');
+			return $this->success('修改成功', config('site_root').'/admin/index_change');
 		}else{
-			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin');
+			return $this->error('未知错误，可能是配置文件不可写，请联系管理员', config('site_root').'/admin/index_change');
 		}
 	}
 

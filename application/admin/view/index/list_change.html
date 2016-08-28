@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="common/head"}
+  <title>后台管理</title>
+</head>
+<body>
+
+  {include file="common/nav"}
+
+
+  <div class="am-cf admin-main">
+    {include file="common/sidebar"}
+    <div class="admin-content">
+      <div class="admin-content-body">
+        <div class="am-cf am-padding">
+          <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 图片/视频列表 </strong><small>URL:<a href="{:config('site_root')}/list" target="view_temp">{:config('site_root')}/list</a></small></div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-sm-12">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">图片/视频列表修改<small>(若有某行有数据为空,则该行不被记录)</small></div>
+              <div class="am-panel-bd">
+                <form class="am-form" method="post" action="{:config('site_root')}/admin/u/changeImageVideoList">
+                  <table style="width:100%" id="image_video_table">
+                    <tr>
+                      <th>图片地址</th>
+                      <th>类型</th>
+                      <th>标题</th>
+                      <th>描述</th>
+                      <th>地址</th>
+                    </tr>
+                    {foreach $items as $val}
+                    <tr>
+                      <td><input type="text" name="image[]" class="am-form-field am-radius" value="{$val.image}"></td>
+                      <td><select name="type[]" class="am-form-field am-radius"><option value="image" {php}if($val['type']==='image') echo 'selected';{/php}>图片</option><option value="video" {php}if($val['type']==='video') echo 'selected';{/php}>视频</option></select></td>
+                      <td><input type="text" name="title[]" class="am-form-field am-radius" value="{$val.title}"></td>
+                      <td><input type="text" name="description[]" class="am-form-field am-radius" value="{$val.description}"></td>
+                      <td><input type="text" name="href[]" class="am-form-field am-radius" value="{$val.href}"></td>
+                    </tr>
+                    {/foreach}
+                  </table>
+                  <span onclick="addARowInImageVideoForm()" class="am-btn am-btn-primary">添加</span>
+                  <input type="submit" class="am-btn am-btn-primary" value="提交修改">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="am-g">
+          <div class="am-u-md-6">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd">效果查看<small>(需提交修改)</small></div>
+              <div class="am-panel-bd">
+                <iframe src="{:config('site_root')}/list/?viewTemp=1" frameborder="0" style="width:100%;height:600px"></iframe>
+              </div>
+            </div>
+          </div>
+      </div>
+      <footer class="am-footer am-footer-default">
+        <div class="am-footer-miscs">
+          <p>由维尔创业工作室提供技术支持</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+  {include file="common/footer"/}
+  <script>
+    function addARowInImageVideoForm(){
+      $('#image_video_table').append('<tr>\
+        <td><input type="text" name="image[]" class="am-form-field am-radius"></td>\
+        <td><select name="type[]" class="am-form-field am-radius"><option value="image" >图片</option><option value="video">视频</option></select></td>\
+        <td><input type="text" name="title[]" class="am-form-field am-radius"></td>\
+        <td><input type="text" name="description[]" class="am-form-field am-radius"></td>\
+        <td><input type="text" name="href[]" class="am-form-field am-radius"></td>\
+      </tr>');
+    }
+  </script>
+</body>
+</html>

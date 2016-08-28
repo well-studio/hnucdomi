@@ -1,0 +1,236 @@
+{include file="common/head" /}
+
+<title>后台管理</title>
+</head>
+<body>
+	<div class="am-u-sm-offset-3 am-u-sm-6 ad-upload-box">
+		<h1>信息</h1>
+		<p>微信客户端中x5浏览器中的本地缓存比较久，若要使用微信查看修改效果请使用微信进入 dubugx5.qq.com 代理下面的最下面的位置清楚文件缓存就ok了</p>
+		<p>使用cdn的同学请注意，因为cdn缓存更新较慢，如果上传图片图片名相同的话会覆盖之前的图片，但是在cdn下面更新会很慢，建议使用新的文件名</p>
+		<p>管理员避免使用危险字符，比如&lt;与&gt;,应改为&amp;lt;与&amp;gt; 部分情况下需要使用script,所以不做htmlspecialchars</p>
+		<hr>
+		<h1>数据上传，目前数据条数:{$stu_num}</h1>
+		<form method="post" action="{:config('site_root')}/admin/index/fileUpload" enctype="multipart/form-data">
+			<input id="file" type="file" name="file" accept="application/vnd.ms-excel,.xlsx">
+			<div id="file-list"></div>
+			<button type="submit" id="uplbtn" class="am-btn am-btn-primary am-btn-sm" disabled="disabled">上传</button>
+			<p>xls/xlsx文件，2M以内，单个文件不得超过1001行，可多次上传，模板文件下载：<a href="{:config('site_root')}/public/template.xlsx">template.xlsx</a></p>
+		</form>
+		<button class="am-btn am-btn-danger am-btn-sm" onclick="del();">清空数据库</button>
+		<hr>
+
+
+		<h1>班级学生查询</h1>
+		{foreach name="class" key="key" item="value"}
+			<button class="am-btn am-btn-sm am-btn-default" style="margin-top:5px" onclick="query_class('{$value['class']}')">{$value['class']}</button>
+		{/foreach}
+		<div id="am-class-name-fields"></div>
+
+
+		<hr>
+
+		<h1>首页定制</h1>
+		<form class="am-form" action="{:config('site_root')}/admin/u/changeOptions" method="post">
+			<h3>首页配置项</h3>
+			{foreach name="option" item="value" key="key"}
+				<div class="am-form-group">
+					<label for="lb_{$key}">{$key}</label>
+					<input type="text" id="lb_{$key}" name="{$key}" value="{$value}" autocomplete="off">
+				</div>
+			{/foreach}
+			<div class="am-form-group">
+				<input type="submit" class="am-btn am-btn-primary an-" value="提交">
+			</div>
+		</form>
+		<br><br>
+
+		<form action="{:config('site_root')}/admin/index/changeIndex" method="post">
+			<label><h3>首页按钮</h3></label>
+			<table style="width:100%">
+				<tr>
+					<th width="20%">title</th>
+					<th width="25%"><a href="http://fontawesome.io/icons/" target="_blank">icon class</a></th>
+					<th width="55%">href</th>
+				</tr>
+				{for start="0" end="9" comparison="<" step="1" name="i"}
+					<tr>
+						<td><input type="text" name="title[]" class="am-form-field am-radius" value="{$conf[$i]['title']}"></td>
+						<td><input type="text" name="icon[]" class="am-form-field am-radius" value="{$conf[$i]['icon']}"></td>
+						<td><input type="text" name="href[]" class="am-form-field am-radius" value="{$conf[$i]['href']}"></td>
+					</tr>
+				{/for}
+			</table>
+			<input type="submit" class="am-btn am-btn-primary" value="提交">
+		</form>
+
+		<br>
+		<form class="am-form" action="{:config('site_root')}/admin/u/changeCarousel" method="post">
+			<div class="am-form-group">
+				<label for="changeCarousel"><h3>首页轮播图(多个图请用换行分割)</h3></label>
+				<textarea rows="5" id="changeCarousel" name="carouselUrls">{$carImgStr}</textarea>
+			</div>
+			<div class="am-form-group">
+				<input type="submit" class="am-btn am-btn-primary an-" value="提交">
+			</div>
+		</form>
+		<hr>
+		<h1>图片/视频列表管理(若有某行有数据为空,则该行不被记录)</h1>
+		<form class="am-form" method="post" action="{:config('site_root')}/admin/u/changeImageVideoList">
+			<table style="width:100%" id="image_video_table">
+				<tr>
+					<th>图片地址</th>
+					<th>类型</th>
+					<th>标题</th>
+					<th>描述</th>
+					<th>地址</th>
+				</tr>
+				{foreach $items as $val}
+				<tr>
+					<td><input type="text" name="image[]" class="am-form-field am-radius" value="{$val.image}"></td>
+					<td><select name="type[]" class="am-form-field am-radius"><option value="image" {php}if($val['type']==='image') echo 'selected';{/php}>图片</option><option value="video" {php}if($val['type']==='video') echo 'selected';{/php}>视频</option></select></td>
+					<td><input type="text" name="title[]" class="am-form-field am-radius" value="{$val.title}"></td>
+					<td><input type="text" name="description[]" class="am-form-field am-radius" value="{$val.description}"></td>
+					<td><input type="text" name="href[]" class="am-form-field am-radius" value="{$val.href}"></td>
+				</tr>
+				{/foreach}
+			</table>
+			<span onclick="addARowInImageVideoForm()" class="am-btn am-btn-primary">添加</span>
+			<input type="submit" class="am-btn am-btn-primary" value="提交修改">
+		</form>
+
+
+
+		<hr>
+		<h1>图片管理(右键图片复制地址, 图片名称不允许有中文字符)</h1>
+		<form method="post" action="{:config('site_root')}/admin/index/imageUpload" enctype="multipart/form-data">
+			<input id="imgFile" type="file" name="imageFile" accept=".png,.jpg,.gif">
+			<div id="imgFile-list"></div>
+			<button type="submit" id="imgUplbtn" class="am-btn am-btn-primary am-btn-sm" disabled="disabled">上传</button>
+			<p>允许上传png/jpg/gif文件，2M以内</p>
+		</form>
+		{for start="0" end="count($imgNames)" comparison="<" step="1" name="i"}
+			<div class="ad-img-box">
+				<img src="{:config('site_root')}/public/images/{$imgNames[$i]}" alt="">
+				<button class="am-btn am-btn-danger am-btn-sm am-btn-block" onclick="delImg('{$imgNames[$i]}')">删除图片</button>
+			</div>
+		{/for}
+		<hr>
+
+		<h1>修改密码</h1>
+		<form class="am-form" action="{:config('site_root')}/admin/u/changePass" method="post">
+			<input type="hidden" name="changePass" value="123456">
+			<div class="am-form-group">
+				<label class="am-form-label" for="oldPas">旧密码</label>
+				<input type="password" class="" name="oldpass" id="oldPas" placeholder="old password" autocomplete="off">
+			</div>
+			<div class="am-form-group">
+				<label class="am-form-label" for="newPas">新密码</label>
+				<input type="password" class="" name="newpass" id="newPas" placeholder="new password" autocomplete="off">
+			</div>
+			<div class="am-form-group">
+				<label class="am-form-label" for="conPas/">确认密码</label>
+				<input type="password" class="" name="conpass" id="conPas" placeholder="confirm password">
+			</div>
+			<div class="am-form-group">
+				<input type="submit" class="am-btn am-btn-primary" value="提交">
+			</div>
+		</form>
+		<hr>
+	</div>
+
+
+
+	{include file="common/footer"/}
+	<script src="{:config('site_root')}/public/plugins/layer/layer.js"></script>
+	<script>
+		$(function() {
+			$('#file').on('change', function() {
+				var file = $('#file')[0].files[0];
+				console.dir(file);
+				var fileName = '<span class="am-badge">' + file.name + '</span> ';
+				$('#file-list').html(fileName);
+				$('#uplbtn').attr('disabled', false);
+			});
+			$('#imgFile').on('change', function() {
+				var file = $('#imgFile')[0].files[0];
+				console.dir(file);imgFile
+				var fileName = '<span class="am-badge">' + file.name + '</span> ';
+				$('#imgFile-list').html(fileName);
+				$('#imgUplbtn').attr('disabled', false);
+			});
+		});
+		function del(){
+			$.ajax({
+				url:'{:config('site_root')}/admin/u/ajax',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					func: 'delDataTable'
+				},
+				success: function(data){
+					layer.msg(data.msg);
+				}
+			});
+		}
+		function delImg(imgName){
+			$.ajax({
+				url:'{:config('site_root')}/admin/u/ajax',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					func: 'delImg',
+					name: imgName,
+				},
+				success: function(data){
+					layer.msg(data.msg);
+					setTimeout(function(){
+						history.go(0);
+					},750);
+				}
+			});
+		}
+		function query_class(className){
+			$('#am-class-name-fields').html('<i class="fa fa-spinner fa-spin"></i>');
+			$.ajax({
+				url: '{:config('site_root')}/admin/u/ajax',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					func: 'queryClass',
+					name: className
+				},
+				success: function(data){
+					if(data.length == 0) return;
+					var row = '<tr>';
+					for(key in data[0]){
+						if(key === 'note') continue;
+						row += '<th>'+key+'</th>'
+					}
+					row += '</tr>'
+					for(var i=0; i<data.length; i++){
+						row += '<tr>';
+						for(var key in data[i]){
+							if(key === 'note') continue;
+							row += '<td>'+data[i][key]+'</td>'
+						}
+						row += '</tr>'
+					}
+					$('#am-class-name-fields').html('<table class="am-table">'+row+'</table>');
+				},
+				error: function(){
+					layer.msg('未知错误');
+				}
+			})
+		}
+		function addARowInImageVideoForm(){
+			$('#image_video_table').append('<tr>\
+					<td><input type="text" name="image[]" class="am-form-field am-radius"></td>\
+					<td><select name="type[]" class="am-form-field am-radius"><option value="image" >图片</option><option value="video">视频</option></select></td>\
+					<td><input type="text" name="title[]" class="am-form-field am-radius"></td>\
+					<td><input type="text" name="description[]" class="am-form-field am-radius"></td>\
+					<td><input type="text" name="href[]" class="am-form-field am-radius"></td>\
+				</tr>');
+		}
+	</script>
+</body>
+</html>
