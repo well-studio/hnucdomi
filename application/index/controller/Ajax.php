@@ -7,7 +7,7 @@ use think\Session;
 
 class Ajax extends Controller{
 	public function index(){
-		if(!preg_match('/^http:\/\/'.config('domain').'/', $_SERVER["HTTP_REFERER"]) ||
+		if(!preg_match('/^https?:\/\/'.config('domain').'/', $_SERVER["HTTP_REFERER"]) ||
 			Session::get('anti_spider') !== '(｀･ω･´)' ||
 			!Request::instance()->isMobile()) {
 			return 'error request';
