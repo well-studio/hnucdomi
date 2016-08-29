@@ -23,3 +23,20 @@
     </div>
   </div>
 </div>
+<script>
+  (function(){
+    var reg = /^https?:\/\/{:config('domain')}(.*?)(?:\?.*)?$/;
+    if(!reg.exec(location.href)){
+      return;
+    }
+    var uri = RegExp.$1;
+    var tarEleA = document.getElementsByClassName('am-list admin-sidebar-list')[0]
+    .getElementsByTagName('A');
+    for(var i=0; i<tarEleA.length; i++){
+      if(tarEleA[i].getAttribute('href') === uri){
+        tarEleA[i].setAttribute('class', 'am-active');
+        return;
+      }
+    }
+  })()
+</script>
