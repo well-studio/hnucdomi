@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>跳转提示</title>
 	<link rel="stylesheet" href="<?php echo(config('site_root'));?>/public/plugins/font-awesome/4.6.1/css/font-awesome.min.css">
