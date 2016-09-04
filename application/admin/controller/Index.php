@@ -146,6 +146,45 @@ class Index extends Controller {
 				$k[] = $r;
 			}
 			Db::table('stu_info')->insertAll($k);
+		}else{
+			return $this->error('EXM!?这是EXCEL么', config('site_root').'/admin/static_upload');
+		}
+		return $this->success('上传成功', config('site_root').'/admin/static_upload');
+	}
+
+	public function updateTable(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+		if(preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'])){
+
+
+			preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'], $res);
+			vendor('Excel.PHPExcel.IOFactory');
+			$reader = null;
+			if($res[1] === '.xls'){
+				$reader = \PHPExcel_IOFactory::createReader('Excel5');
+			}else{
+				$reader = \PHPExcel_IOFactory::createReader('Excel2007');
+			}
+			$ex = $reader->load($_FILES['file']['tmp_name']);
+			$st = $ex->getSheet(0);
+			$highestRow = $st->getHighestRow(); // 取得总行数
+			$highestColumm = $st->getHighestColumn(); // 取得总列数
+			$highestColumm= \PHPExcel_Cell::columnIndexFromString($highestColumm);
+			if($highestColumm !== 3){
+				return $this->error('您上传的数据好像有点问题呐~~~', config('site_root').'/admin/static_upload');
+			}else if($highestRow > 2001){
+				return $this->error('单次上传数据不得超过2000条', config('site_root').'/admin/static_upload');
+			}
+			for ($row = 2; $row <= $highestRow; $row++){
+				$r['id']       = floatval($st->getCellByColumnAndRow(0, $row)->getValue());
+				$r['domi_num'] = $st->getCellByColumnAndRow(1, $row)->getValue();
+				$r['bed_num']  = floatval($st->getCellByColumnAndRow(2, $row)->getValue());
+				DB::table('stu_info')->update($r);
+			}
+		}else{
+			return $this->error('EXM!?这是EXCEL么', config('site_root').'/admin/static_upload');
 		}
 		return $this->success('上传成功', config('site_root').'/admin/static_upload');
 	}

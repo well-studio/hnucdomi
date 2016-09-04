@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `stu_info` (
   `major` varchar(50) NOT NULL DEFAULT '',
   `class` varchar(100) NOT NULL,
   `domi_num` varchar(20) DEFAULT '',
+  `bed_num` int(11) NOT NULL DEFAULT '0',
   `note` text,
   UNIQUE KEY `id` (`id`),
   KEY `name` (`name`,`domi_num`),
@@ -18,4 +19,3 @@ CREATE TABLE IF NOT EXISTS `stu_info` (
   KEY `exm_id` (`exm_id`),
   KEY `class` (`class`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-

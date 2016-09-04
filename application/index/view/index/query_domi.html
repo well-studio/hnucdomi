@@ -1,11 +1,16 @@
 {include file="common/head" /}
 <link rel="stylesheet" href="{:Config('site_root')}/public/plugins/weui/weui.css">
 <title>宿舍查询</title>
+<style>
+	.weui_cell button[disabled], html input[disabled]{
+		color: #333;
+	}
+</style>
 </head>
 <body class="bd">
 	<!-- header -->
 	<div class="hd">
-		<h1 class="page_title">宿舍查询</h1>
+		<a href="javascript:alertImg('{:config('site_root')}/public/images/qrcode.jpg');"><img alt="湖商学工在线" src="{:config('site_root')}/public/images/qrcode.jpg" style="max-height:50px; max-width:50px; float:left; margin-left:30px"><h1 class="page_title">宿舍查询</h1></a>
 	</div>
 
 
@@ -74,60 +79,60 @@
 						<div class="weui_cells">\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_id" class="weui_label">学号</label>\
+									<label class="weui_label">学号</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_id" value="' + data.stu_id + '" disabled="disabled">\
+									<span class="weui_input">'+ data.stu_id + '</span>\
 								</div>\
 							</div>\
 							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_name" class="weui_label">姓名</label>\
+									<label class="weui_label">姓名</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_name" value="' + data.stu_name + '" disabled="disabled">\
+									<span class="weui_input">'+ data.stu_name + '</span>\
 								</div>\
 							</div>\
 							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_academy" class="weui_label">学院</label>\
+									<label class="weui_label">学院</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_academy" value="' + data.stu_academy + '" disabled="disabled">\
+									<span class="weui_input">'+ data.stu_academy + '</span>\
 								</div>\
 							</div>\
 							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_class" class="weui_label">班级</label>\
+									<label class="weui_label">班级</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_class" value="' + data.stu_class + '" disabled="disabled">\
+									<span class="weui_input">'+ data.stu_class + '</span>\
 								</div>\
 							</div>\
 							\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_domiNum" class="weui_label">宿舍</label>\
+									<label class="weui_label">宿舍</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_domiNum" value="' + data.stu_domiNum + '" disabled="disabled">\
+									<span class="weui_input">'+ data.stu_domiNum + '</span>\
 								</div>\
 							</div>\
 							<div class="weui_cell">\
 								<div class="weui_cell_hd">\
-									<label for="stu_domiNum" class="weui_label">你的室友们</label>\
+									<label class="weui_label">室友</label>\
 								</div>\
 								<div class="weui_cell_bd weui_cell_primary">\
-									<input type="text" class="weui_input" id="stu_domiNum" value="' + data.domi_mate.join(', ') + '" disabled="disabled">\
+									<span class="weui_input">' + data.domi_mate.join(', ') +'</span>\
 								</div>\
 							</div>\
 						</div>\
 						');
 				}else if(_data.length === 0){
-					$('#info_box').html('<div class="weui_cell">好像什么都没有诶~你是不是打错了信息</div>');
+					$('#info_box').html('<div class="weui_cell">好像什么都没有诶~你是不是打错了信息。</div><div class="weui_cell">ps:目前仅开通了北苑宿舍查询</div>');
 				}else if(_data.length > 1){
 					var outStr = '<div class="weui_cells_title">有重名哦~请从下方查看信息</div><section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion="{}">';
 					for(var i=0; i<_data.length; i++){
@@ -142,54 +147,54 @@
 									<div class="weui_cells">\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_id" class="weui_label">学号</label>\
+												<label class="weui_label">学号</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_id" value="' + _data[i].stu_id + '" disabled="disabled">\
+												<span class="weui_input">'+ _data[i].stu_id + '" </span>\
 											</div>\
 										</div>\
 										\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_name" class="weui_label">姓名</label>\
+												<label class="weui_label">姓名</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_name" value="' + _data[i].stu_name + '" disabled="disabled">\
+												<span class="weui_input">'+  _data[i].stu_name + '</span>\
 											</div>\
 										</div>\
 										\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_academy" class="weui_label">学院</label>\
+												<label class="weui_label">学院</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_academy" value="' + _data[i].stu_academy + '" disabled="disabled">\
+												<span class="weui_input">'+ _data[i].stu_academy + '</span>\
 											</div>\
 										</div>\
 										\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_class" class="weui_label">班级</label>\
+												<label class="weui_label">班级</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_class" value="' + _data[i].stu_class + '" disabled="disabled">\
+												<span class="weui_input">'+ _data[i].stu_class + '</span>\
 											</div>\
 										</div>\
 										\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_domiNum" class="weui_label">宿舍</label>\
+												<label class="weui_label">宿舍</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_domiNum" value="' + _data[i].stu_domiNum + '" disabled="disabled">\
+												<span class="weui_input">'+ _data[i].stu_domiNum + '</span>\
 											</div>\
 										</div>\
 										<div class="weui_cell">\
 											<div class="weui_cell_hd">\
-												<label for="stu_domiNum" class="weui_label">你的室友们</label>\
+												<label class="weui_label">室友</label>\
 											</div>\
 											<div class="weui_cell_bd weui_cell_primary">\
-												<input type="text" class="weui_input" id="stu_domiNum" value="' + _data[i].domi_mate.join(', ') + '" disabled="disabled">\
+												<span class="weui_input">' + data.domi_mate.join(', ') +'</span>\
 											</div>\
 										</div>\
 									</div>\
