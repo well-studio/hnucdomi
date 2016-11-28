@@ -7,7 +7,7 @@ use think\Session;
 
 class Index extends Controller {
 	public function index(){
-		// if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		$now = strtotime(date('Y-m-d', time()));
 		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC', [ $now, $now]);
@@ -31,7 +31,7 @@ class Index extends Controller {
 	}
 
 	public function detail(){
-		// if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		$uuid = input('param.uuid');
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		$vote = Db::query('SELECT `id`,`name`,`uuid`,`created`,`start_time`,`end_time`,`need_code` FROM `wl_vote` WHERE `uuid` = ? LIMIT 1', [$uuid]);
@@ -66,6 +66,7 @@ class Index extends Controller {
 		return $this->fetch();
 	}
 	public function check_inv(){
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		if(!isset($_SERVER['HTTP_REFERER'])) return '404';
 		if(preg_match('/\/vote\/(\w+?)(?:\?|$|#|\/)/', $_SERVER['HTTP_REFERER'], $res)){
 			$inv = input('post.inv');
@@ -81,6 +82,7 @@ class Index extends Controller {
 		}
 	}
 	public function submit(){
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		if(preg_match('/\/vote\/(\w+?)(?:\?|$|#|\/)/', $_SERVER['HTTP_REFERER'], $res)){
 			$inv = input('post.detail.inv');
 			$uuid = $res[1];
