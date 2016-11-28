@@ -179,6 +179,7 @@
   </div>
   {include file="common/footer"/}
   <script src="{:config('site_root')}/public/js/uuid.js"></script>
+  <script src="{:config('site_root')}/public/js/clipboard.js"></script>
   <script>
     $(function() {
       $('#cre_start_time').datepicker();
@@ -188,11 +189,13 @@
     });
     function showDetail(vid){
       getDetail(vid, function(data){
+        console.log(data);
         var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>' + data.vote.name + '</h2></p>';
         html += '<table class="am-table am-table-bordered">'
         html += '<tr><th>#</th><th>题目/选项</th><th>票数</th></tr>';
         for(var i=0; i<data.item.length; i++){
-          html += '<tr class="am-active"><td>' + (i+1) + '</td><td>' + data.item[i].description + '</td><td></td></tr>';
+          var description = data.item[i].description + (data.item[i].limit_count == 1 ? '<small> (单选)</small>' : ('<small> (限选'+data.item[i].limit_count+'个)</small>'));
+          html += '<tr class="am-active"><td>' + (i+1) + '</td><td>' + description + '</td><td></td></tr>';
           for(var j=0; j<data.item[i].option.length; j++){
             html += '<tr><td> </td><td>' + data.item[i].option[j].content + '</td><td>' + data.item[i].option[j].count + '</td></tr>';
           }
@@ -211,7 +214,25 @@
     }
     function alertUrl(uuid){
       var protocol = location.href.substr(4, 1) === 's' ? 'https': 'http';
-      layer.open({'content': protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid});
+      // layer.open({'content': protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid});
+      var url = protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid;
+      var opid = layer.open({
+        shade: [0.8, '#393D49'],
+        scrollbar: false,
+        title: '查看链接',
+        content: '<input type="text" id="gurl" value="' + url + '" style="width:100%">',
+        time: 0,
+        area: '500px',
+        btn: ['复制', '取消'],
+        yes: function(index){
+          new Clipboard('.layui-layer-btn0', {
+              text: function(trigger) {
+                layer.msg('复制成功');
+                return url;
+              }
+          });
+        },
+      });
     }
     function showInvitations(vid){
       var layerId = layer.load(2);
@@ -256,11 +277,11 @@
     }
     function showAppendOption(iid, pos, btn_id){
       $('#' + btn_id).attr('href', 'javascript:showAppendOption(' + iid + ',' + (pos+1) + ',\'' + btn_id + '\')');
-      $('#vote_option_append_field_' + iid).append('<label class="am-form-label am-u-sm-1 am-u-sm-offset-1">选项' + (pos+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + iid + '_option_0[]" value="" placeholder="不填表示无该选项"></div>');
+      $('#vote_option_append_field_' + iid).append('<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + iid + '_option_0[]" value="" placeholder="不填表示无该选项"></div>');
     }
     function showAppendOptionNew(posIid, pos, btn_id){
       $('#' + btn_id).attr('href', 'javascript:showAppendOptionNew(' + posIid + ',' + (pos+1) + ',\'' + btn_id + '\')');
-      $('#vote_option_append_field_0_' + (posIid-1)).append('<label class="am-form-label am-u-sm-1">选项' + (pos+1) + '</label><div class="am-u-sm-11"><input type="text" name="vote_item_' + posIid + '_option_0_' + (posIid) + '[]" value="" placeholder="不填表示无该选项"></div>');
+      $('#vote_option_append_field_0_' + (posIid-1)).append('<label class="am-form-label am-u-sm-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-11"><input type="text" name="vote_item_' + posIid + '_option_0_' + (posIid) + '[]" value="" placeholder="不填表示无该选项"></div>');
     }
     function showAppendItem(pos){
       $('#append_item_btn').attr('href', 'javascript: showAppendItem(' + (pos+1) + ')');
@@ -284,9 +305,9 @@
         var html = '';
         for(var i=0; i<item.length; i++){
           html += '<div class="am-u-sm-12"><hr></div><div class="am-form-group am-u-md-12"><div class="am-form-inline"><label class="am-u-sm-1">题目' + (i+1) + ':</label><span class="am-u-sm-2" style="text-align:right;">允许最大多选数：</span><div class="am-form-group" style="width:50px;"><input type="number"" name="vote_item_limit_count_' + item[i].iid + '" value="' + item[i].limit_count + '"></div></div>'
-          html += '<div class="am-form-set am-g" id="vote_item_' + item[i].iid + '_box"><div class="am-u-sm-1">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_' + item[i].iid + '" value="' + item[i].description + '"></div>'
+          html += '<div class="am-form-set am-g" id="vote_item_' + item[i].iid + '_box"><div class="am-u-sm-1" style="text-align:right">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_' + item[i].iid + '" value="' + item[i].description + '"></div>'
           for(var j=0; j<item[i].option.length; j++){
-            html += '<label class="am-form-label am-u-sm-1 am-u-sm-offset-1">选项' + (j+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + item[i].iid + '_option_' + item[i].option[j].oid + '" value="' + item[i].option[j].content + '"></div>';
+            html += '<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (j+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + item[i].iid + '_option_' + item[i].option[j].oid + '" value="' + item[i].option[j].content + '"></div>';
           }
           html += '<div id="vote_option_append_field_' + item[i].iid + '"></div><div class="am-u-sm-offset-2 am-u-sm-10"><a class="am-btn am-btn-block am-btn-success" href="javascript:showAppendOption(' + item[i].iid + ',' + item[i].option.length + ',\'btn_id_' + item[i].iid + '\')" id="btn_id_' + item[i].iid + '"><i class="am-icon-plus-circle" ></i>　选项</a></div></div></div>'
         }
