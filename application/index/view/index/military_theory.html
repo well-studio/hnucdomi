@@ -1,0 +1,99 @@
+{include file="common/head" /}
+<link rel="stylesheet" href="{:Config('site_root')}/public/plugins/weui/jq-weui.css">
+<link rel="stylesheet" href="{:Config('site_root')}/public/plugins/weui/weui.css">
+<title>军事理论课程查询</title>
+<style>
+	.weui_cell button[disabled], html input[disabled]{
+		color: #333;
+	}
+</style>
+</head>
+<body class="bd">
+	<!-- header -->
+	<div class="hd">
+		<a href="javascript:alertImg('{:config('site_root')}/public/images/qrcode.jpg');"><img alt="湖商学工在线" src="{:config('site_root')}/public/images/qrcode.jpg" style="max-height:50px; max-width:50px; float:left; margin-left:30px"><h1 class="page_title">军事理论课程查询</h1></a>
+	</div>
+
+
+	<div class="weui_cells_title">选择学院/班级</div>
+	<div class="weui_cells">
+		<div class="weui_cell">
+			<div class="weui_cell_hd">
+				<label for="picker_academy" class="weui_label">学院</label>
+			</div>
+			<div class="weui_cell_bd weui_cell_primary">
+				<input type="text" class="weui_input" id="picker_academy" placeholder="点击选择">
+			</div>
+		</div>
+		<!-- <div id="hide_show" style="display: none"> -->
+			<div class="weui_cell">
+				<div class="weui_cell_hd">
+					<label for="picker_class" class="weui_label">班级</label>
+				</div>
+				<div class="weui_cell_bd weui_cell_primary">
+					<input type="text" class="weui_input" id="picker_class" placeholder="点击选择">
+				</div>
+			</div>
+		<!-- </div> -->
+	</div>
+	<div id="info"></div>
+{include file="common/footer" /}
+<script type="text/javascript" src="{:config('site_root')}/public/js/weui.js"></script>
+<script type="text/javascript" src="{:config('site_root')}/public/js/aca_cla_pos.js"></script>
+<script>
+	$("#picker_academy").picker({
+		title: "请选择学院",
+		cols: [{
+			textAlign: 'center',
+			values: ['财政金融学院', '法学与公共管理学院', '工商管理学院', '国际教育学院', '会计学院', '计算机与信息工程学院', '经济与贸易学院', '旅游管理学院', '设计艺术学院', '数学与统计学院', '外国语学院', '文学与新闻传播学院']}
+		],
+		onClose: function(){
+			$('#hide_show').show();
+			// $('#picker_class').val(aca_cla[$("#picker_academy").val()][0]);
+			set_class();
+		}
+	});
+	$('#picker_class').picker({
+		title: "请选择班级",
+		cols: [{textAlign: 'center', values:all_cla}],
+		onClose: function(){
+			set_academy();
+			set_info();
+		}
+	});
+	// $('#picker_academy').change(set_class);
+	$('#picker_class').change(set_info);
+	$("#picker_class").picker("open");
+	$("#picker_class").picker("close");
+	$("#picker_academy").picker("open");
+	$("#picker_academy").picker("close");
+	// $('#picker_class').change(set_academy);这个太卡了
+	function set_academy(){
+		var val = $('#picker_class').val();
+		(function(){
+			for(var key in aca_cla){
+				for(var i=0; i<aca_cla[key].length; i++){
+					if(aca_cla[key][i] === val){
+						console.log(key);
+						$('#picker_academy').picker('setValue', [key]);
+						return;
+					}
+				}
+			}
+		})();
+	}
+	function set_class(){
+		$('#picker_class').picker('setValue', aca_cla[$('#picker_academy').val()]);
+	}
+	function set_info(){
+		var pos = cla_pos[$('#picker_class').val()];
+		var str = '<div class="weui_cells_title">安排</div><div class="weui_cells">';
+		for(var i=0; i<pos.length; i++){
+			str += '<div class="weui_cell"><div class="weui_cell_bd weui_cell_primary" style="text-align:center">' + pos[i] + '</div></div>'
+		}
+		str += '</div>';
+		$('#info').html(str);
+	};
+</script>
+</body>
+</html>

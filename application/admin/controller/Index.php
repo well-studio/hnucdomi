@@ -14,6 +14,15 @@ class Index extends Controller {
 
 
 
+	public function vote_manage(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+		$vote = Db::query('SELECT `id`,`name`,`uuid`,`created`,`start_time`,`end_time`,`need_code` FROM `wl_vote`');
+		$this->assign('vote', $vote);
+		return $this->fetch();
+	}
+
 	public function static_upload(){
 		if(Session::get('admin') !== 'zzliux'){
 			$this->redirect('admin/u/login');
@@ -183,10 +192,11 @@ class Index extends Controller {
 				$r['bed_num']  = floatval($st->getCellByColumnAndRow(2, $row)->getValue());
 				DB::table('stu_info')->update($r);
 			}
+			return $this->success('上传成功', config('site_root').'/admin/static_upload');
 		}else{
 			return $this->error('EXM!?这是EXCEL么', config('site_root').'/admin/static_upload');
 		}
-		return $this->success('上传成功', config('site_root').'/admin/static_upload');
+		return $this->error('= =未知错误哦', config('site_root').'/admin/static_upload');
 	}
 
 	public function imageUpload(){

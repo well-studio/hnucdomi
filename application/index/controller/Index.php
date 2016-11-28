@@ -30,6 +30,14 @@ class Index extends Controller{
 		return $this->fetch();
 	}
 
+	public function military_theory(){
+		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
+
+		Session::set('anti_spider', '(｀･ω･´)');
+		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
+		return $this->fetch();
+	}
+
 	//list的函数名竟然不能用。。
 	public function list_(){
 		if (!Request::instance()->isMobile() && input('get.viewTemp') !== '1') return '本网页没有电脑版哦~~';

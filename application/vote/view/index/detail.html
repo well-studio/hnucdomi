@@ -1,0 +1,195 @@
+{include file="common/head"}
+<title>{$detail['vote']['name']}</title>
+<style>
+	.option {
+		display: block;
+		padding: 12px 12px;
+		margin: -12px 0px;
+	}
+	.am-list-news-hd h2 {
+		height: initial;
+	}
+</style>
+</head>
+<body>
+<header data-am-widget="header" class="am-header am-header-default">
+	<div class="am-header-left am-header-nav">
+		<a href="javascript:history.back()">
+			<i class="am-header-icon am-icon-arrow-left"></i>
+		</a>
+	</div>
+	<h1 class="am-header-title">
+		<a href="javascript:;" class="">
+			{$detail['vote']['name']}
+		</a>
+	</h1>
+</header>
+
+<div class="vote-container">
+	{for start="0" end="count($detail['item'])" comparison="<" step="1" name="i"}
+	<div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+		<div class="am-list-news-hd am-cf">
+			<a href="javascript:;" class="">
+			<h2>{$detail['item'][$i]['description']}</h2>
+			</a>
+		</div>
+
+		<div class="am-list-news-bd">
+			<ul class="am-list">
+				{for start="0" end="count($detail['item'][$i]['option'])" comparison="<" step="1" name="j"}
+				<li class="am-g">
+					<a href="javascript:;" class="am-list-item-hd">
+						<span class="option" odata="_{$detail['item'][$i]['iid']}_{$detail['item'][$i]['option'][$j]['oid']}_" ochecked="false">
+							{$detail['item'][$i]['option'][$j]['content']}
+						</span>
+					</a>
+				</li>
+				{/for}
+			</ul>
+		</div>
+	</div>
+	{/for}
+	<div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+		<button id="sub" class="am-btn am-btn-secondary am-btn-block">提交</button>
+	</div>
+</div>
+
+{include file="common/footer"}
+<script>
+(function(){
+	var detail_temp = {$detail_json};
+	var item = {};
+	var item_ramain_count = {};
+	var sub = {inv:'', opt:{}};
+	/* 需要验证码的情况 */
+	if(detail_temp.vote.need_code === 1){
+		(function check_inv(title, inp){
+
+			layer.open({
+				shade: [0.8, '#393D49'],
+				closeBtn: false,
+				scrollbar: false,
+				title: title,
+				content: '<input type="text" id="invinp" value="' + inp + '" style="width:100%">',
+				shift: 6,
+				time: 0,
+				maxWidth: 260,
+				btn: ['确定', '取消'],
+				yes: function(index){
+					var inv = $('#invinp').val();
+					layer.close(index);
+					var loadId = layer.load(2);
+					$.ajax({
+						url: '{:config('site_root')}/vote/index/check_inv',
+						data:{
+							inv: inv,
+						},
+						dataType: 'json',
+						method: 'post',
+						success: function(data){
+							layer.close(loadId);
+							if(data.err !== 0){
+								check_inv(data.msg, inv);
+							}else{
+								sub.inv = inv;
+								layer.msg('邀请码验证成功');
+							}
+						},
+						error: function(){
+							layer.close(loadId);
+							check_inv('网络错误', inv);
+						}
+					});
+				},
+				btn2: function(index){
+					layer.close(index);
+					var loadId = layer.load(2);
+					location.href = '{:config('site_root')}/vote';
+				}
+			});
+		})('请输入邀请码', '')
+	}
+	for(var i=0; i<detail_temp.item.length; i++){
+		item[detail_temp.item[i].iid] = detail_temp.item[i];
+		var tmpOption = {};
+		for(var j=0; j<item[detail_temp.item[i].iid].option.length; j++){
+			tmpOption[item[detail_temp.item[i].iid].option[j].oid] = item[detail_temp.item[i].iid].option[j];
+		}
+		item[detail_temp.item[i].iid].option = tmpOption;
+		item_ramain_count[detail_temp.item[i].iid] = detail_temp.item[i].limit_count;
+	}
+	$('.option').bind('click', function(event) {
+		var tar = $(event.target);
+		var data = tar.attr('odata');
+		var reg = /_(\d+?)_(\d+?)_/;
+		var iid, oid;
+		if(reg.exec(data)){
+			iid = RegExp.$1;
+			oid = RegExp.$2;
+		}else{
+			return;
+		}
+		if(tar.attr('ochecked') === 'false'){
+			if(item_ramain_count[iid] === 0){
+				layer.msg('该题只能选择 ' + item[iid].limit_count + ' 个', {shift:6, time:1000});
+				return;
+			}
+			sub.opt[oid] = true;
+			item_ramain_count[iid]--;
+
+			tar.attr('class', 'option am-btn-primary');
+			tar.attr('ochecked', 'true');
+		}else{
+			sub.opt[oid] = false;
+			item_ramain_count[iid]++;
+
+			tar.attr('class', 'option');
+			tar.attr('ochecked', 'false');
+		}
+	});
+	$('#sub').bind('click', function(){
+		var itemLength = 0;
+		var itemIsUsed = 0;
+		for(var ikey in item){
+			itemLength++;
+			for(var okey in item[ikey].option){
+				if(sub.opt[okey] === true){
+					itemIsUsed++;
+					break;
+				}
+			}
+		}
+		if(itemIsUsed !== itemLength){
+			layer.msg('你还有题目未完成哦~',{shift: 6});
+			return ;
+		}
+		var layerId = layer.load(2);
+		$.ajax({
+			url:'{:config('site_root')}/vote/submit',
+			method: 'post',
+			data: {
+				detail: sub
+			},
+			dateType: 'json',
+			success: function(data){
+				layer.close(layerId);
+				if(data.err === 0){
+					$('#sub').unbind();
+					layer.msg(data.msg + '<br>1秒后跳转回首页');
+					setTimeout(function(){
+						location.href = '{:config('site_root')}/vote';
+					}, 1000);
+				}else{
+					layer.msg(data.msg);
+				}
+			},
+			error: function(){
+				layer.close(layerId);
+				layer.msg('网络错误');
+			}
+		});
+	});
+})();
+</script>
+</body>
+</html>
