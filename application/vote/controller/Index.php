@@ -12,11 +12,11 @@ class Index extends Controller {
 		$now = strtotime(date('Y-m-d', time()));
 		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC', [ $now, $now]);
 		foreach($res as &$v){
-			if ($v['need_code'] === 1) {
+			if ($v['need_code'] == 1) {
 				$v['name'] .= ' <span class="am-badge am-badge-primary">邀</span>';
 			}
 			$t =  (int)(($v['end_time']-$now)/86400);
-			if ($t === 0) {
+			if ($t == 0) {
 				$v['remain'] = '不到 1 天结束';
 			} else if($t < 4) {
 				$v['remain'] = '只剩 ' . $t . ' 天结束';
@@ -53,7 +53,7 @@ class Index extends Controller {
 				'content' => $v['content'],
 				// 'count' => $v['cnt']
 			];
-			if ($v['limit_count'] === 1) {
+			if ($v['limit_count'] == 1) {
 				$vote_item_option[$v['iid']]['description'] .= ' <small>（单选）</small>';
 			} else {
 				$vote_item_option[$v['iid']]['description'] .= ' <small>（限选 ' . $v['limit_count'] . ' 个）</small>';
@@ -129,7 +129,7 @@ class Index extends Controller {
 				foreach($ret['item'] as $item){
 					foreach($item['option'] as $option){
 						foreach($sub['detail']['opt'] as $subOptOid => $subOptOidVal){
-							if($subOptOidVal === 'true' && $subOptOid === $option['oid']){
+							if($subOptOidVal == 'true' && $subOptOid == $option['oid']){
 								$item['limit_count']--;
 								break ;
 							}
@@ -137,12 +137,12 @@ class Index extends Controller {
 					}
 					if($item['limit_count']<0){ //多投了
 						//前端正常不会得到这个，防止恶意ajax
-						return ['err'=>233, '请求参数错误'];
+						return ['err'=>233, 'msg'=>'请求参数错误'];
 					}
 					$itemLength++;
 					foreach($item['option'] as $option){
 						foreach($sub['detail']['opt'] as $subOptOid => $subOptOidVal){
-							if($subOptOidVal === 'true' && $subOptOid === $option['oid']){
+							if($subOptOidVal == 'true' && $subOptOid == $option['oid']){
 								$itemIsUsed++;
 								break 2;
 							}
@@ -151,7 +151,7 @@ class Index extends Controller {
 				}
 				if($itemLength !== $itemIsUsed){ //有题目未投
 					//前端正常不会得到这个，防止恶意ajax
-					return ['err'=>233, '请求参数错误'];
+					return ['err'=>234, 'msg'=>'请求参数错误', 'detail'=>['itemLength'=>$itemLength, 'itemIsUsed'=>$itemIsUsed]];
 				}
 				/* 验证票是否有多投和所有票是否都投了 end  */
 
@@ -159,7 +159,7 @@ class Index extends Controller {
 				Db::execute('UPDATE `wl_vote_invitation` SET `used` = ? WHERE `code` = ?', [time(), $inv]);
 				// var_dump($ret['item'][0]);
 				foreach($sub['detail']['opt'] as $k => $v){
-					if($v === 'true'){
+					if($v == 'true'){
 						Db::execute('UPDATE `wl_vote_option` SET `cnt` = `cnt` + 1 WHERE `id` = ?', [$k]);
 					}
 				}

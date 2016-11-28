@@ -62,7 +62,7 @@
 	var item_ramain_count = {};
 	var sub = {inv:'', opt:{}};
 	/* 需要验证码的情况 */
-	if(detail_temp.vote.need_code === 1){
+	if(detail_temp.vote.need_code == 1){
 		(function check_inv(title, inp){
 
 			layer.open({
@@ -130,7 +130,7 @@
 			return;
 		}
 		if(tar.attr('ochecked') === 'false'){
-			if(item_ramain_count[iid] === 0){
+			if(item_ramain_count[iid] == 0){
 				layer.msg('该题只能选择 ' + item[iid].limit_count + ' 个', {shift:6, time:1000});
 				return;
 			}
@@ -173,7 +173,7 @@
 			dateType: 'json',
 			success: function(data){
 				layer.close(layerId);
-				if(data.err === 0){
+				if(data.err == 0){
 					$('#sub').unbind();
 					layer.msg(data.msg + '<br>1秒后跳转回首页');
 					setTimeout(function(){

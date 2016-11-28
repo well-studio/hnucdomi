@@ -6,7 +6,7 @@
 </head>
 <style>
   .showDetailBox {
-    min-width: 600px;
+    min-width: 800px;
   }
 </style>
 <body>
@@ -109,7 +109,7 @@
                         <button class="am-btn am-btn-primary" onclick="showDetail('{$vote[$i]['id']}')">查看</button>
                         <button class="am-btn am-btn-danger" onclick="deleteVote('{$vote[$i]['id']}')">删除</button>
                         <button class="am-btn am-btn-success" onclick="showChangeVote('{$vote[$i]['id']}')">修改</button>
-                        {if condition="($vote[$i]['need_code'] === 1)"}
+                        {if condition="($vote[$i]['need_code'] == 1)"}
                         <button class="am-btn am-btn-secondary" onclick="showInvitations('{$vote[$i]['id']}')">邀请码</button>
                         {/if}
                       </td>
@@ -149,7 +149,7 @@
                           <label class="am-form-label">关联投票</label>
                           <select id="invitations_relation">
                           {for start="0" end="count($vote)" comparison="<" step="1" name="i"}
-                            {if condition="($vote[$i]['need_code'] === 1)"}
+                            {if condition="($vote[$i]['need_code'] == 1)"}
                             <option value="{$vote[$i]['id']}">{$vote[$i]['name']}</option>
                             {/if}
                           {/for}
@@ -190,7 +190,7 @@
       getDetail(vid, function(data){
         var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>' + data.vote.name + '</h2></p>';
         html += '<table class="am-table am-table-bordered">'
-        html += '<tr><th>#</th><th>题目</th><th>票数</th></tr>';
+        html += '<tr><th>#</th><th>题目/选项</th><th>票数</th></tr>';
         for(var i=0; i<data.item.length; i++){
           html += '<tr class="am-active"><td>' + (i+1) + '</td><td>' + data.item[i].description + '</td><td></td></tr>';
           for(var j=0; j<data.item[i].option.length; j++){
@@ -223,15 +223,13 @@
         },
         dataType: 'json',
         success: function(data){
-          // TODO
           layer.close(layerId);
-          console.log(data);
           var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>邀请码详情</h2></p>';
           html += '<table class="am-table am-table-bordered">'
           html += '<tr><th>#</th><th>邀请码</th><th>备注</th><th>使用情况</th></tr>';
           for(var i=0; i<data.length; i++){
             var used;
-            if(data[i].used === 0){
+            if(data[i].used == 0){
               used = '<span style="color:#dd514c">未使用</span>'
             }else{
               var date = new Date(data[i].used*1000);
@@ -277,7 +275,7 @@
         $('#cha_name').val(data.vote.name);
         $('#cha_start_time').datepicker('setValue', data.vote.start_time);
         $('#cha_end_time').datepicker('setValue', data.vote.end_time);
-        if(data.vote.need_code === 1){
+        if(data.vote.need_code == 1){
           $('#cha_need_code').prop('checked', true);
         }else{
           $('#cha_need_code').prop('checked', false);
@@ -295,7 +293,6 @@
         html += '<div class="am-u-sm-12"><div class="am-g" id="vote_item_append_field"></div><hr></div><div class="am-u-sm-offset-1 am-u-sm-11"><a href="javascript:showAppendItem(' + item.length + ')" class="am-btn am-btn-secondary am-btn-block" id="append_item_btn"><i class="am-icon-plus-circle" ></i>　题目</a></a></div><div class="am-u-sm-12"><br><hr></div>';
         html += '<input type="hidden" name="vote_id" value="' + data.vote.id + '">'
         $('#cha_append_box').html(html);
-        console.log(data);
       });
     }
     function getDetail(id, callback){

@@ -57,6 +57,11 @@ class Vote extends Controller {
 				'content' => $v['content'],
 				'count' => $v['cnt']
 			];
+/*			if ($v['limit_count'] == 1) {
+				$vote_item_option[$v['iid']]['description'] .= ' <small>（单选）</small>';
+			} else {
+				$vote_item_option[$v['iid']]['description'] .= ' <small>（限选 ' . $v['limit_count'] . ' 个）</small>';
+			}*/
 			$vote_item_option[$v['iid']]['option'][] = $tempArr;
 		}
 		return ['vote' => $vote, 'item' => array_values($vote_item_option)];
@@ -93,14 +98,16 @@ class Vote extends Controller {
 			}else if(preg_match('/^vote_item_(\d+?)_option_(\d+?)$/', $k, $res)){
 				// var_dump($res);
 				if($res[2] !== '0'){// 更新选项
-					if(!empty(trim($v))){
+					$v = trim($v);
+					if(!empty($v)){
 						Db::execute('UPDATE `wl_vote_option` SET `content` = ? WHERE `id` = ?', [$v, (int)$res[2]]);
 					}else{
 						Db::execute('DELETE FROM `wl_vote_option` WHERE `id` = ?', [(int)$res[2]]);
 					}
 				}else{// 对于已存在的题目存入选项
 					foreach($v as $vv){
-						if(!empty(trim($vv))){
+						$vv = trim($vv);
+						if(!empty($vv)){
 							Db::execute('INSERT INTO `wl_vote_option`(`iid`, `content`) VALUES(?, ?)', [(int)$res[1], $vv]);
 						}
 					}
@@ -108,14 +115,16 @@ class Vote extends Controller {
 			}else if(preg_match('/vote_item_limit_count_(\d+?)_(\d+?)/', $k, $res)){
 				$limit_count = $v;
 			}else if(preg_match('/^vote_item_(\d+?)_(\d+?)$/', $k, $res)){//插入新题
-				if(!empty(trim($v))){
+				$v = trim($v);
+				if(!empty($v)){
 					Db::execute('INSERT INTO `wl_vote_item`(`vid`,`description`,`limit_count`) VALUES(?, ?, ?)', [(int)input('post.vote_id'), $v, $limit_count]);
 				}
 				$mapTmpIDRealID[$res[2]] = Db::query('SELECT `id` FROM `wl_vote_item` ORDER BY `id` DESC LIMIT 1')[0]['id'];
 			}else if(preg_match('/^vote_item_(\d+?)_option_(\d+?)_(\d+?)$/', $k, $res)){//插入新题的新选项
 				if($res[2] === '0'){
 					foreach($v as $vv){
-						if(!empty(trim($vv))){
+						$vv = trim($vv);
+						if(!empty($vv)){
 							Db::execute('INSERT INTO `wl_vote_option`(`iid`, `content`) VALUES(?, ?)', [$mapTmpIDRealID[$res[1]], $vv]);
 						}
 					}
