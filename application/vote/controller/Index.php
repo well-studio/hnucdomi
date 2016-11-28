@@ -10,7 +10,7 @@ class Index extends Controller {
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		$now = strtotime(date('Y-m-d', time()));
-		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC', [ $now, $now]);
+		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC', [$now, $now]);
 		foreach($res as &$v){
 			if ($v['need_code'] == 1) {
 				$v['name'] .= ' <span class="am-badge am-badge-primary">邀</span>';
@@ -35,8 +35,13 @@ class Index extends Controller {
 		$uuid = input('param.uuid');
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		$vote = Db::query('SELECT `id`,`name`,`uuid`,`created`,`start_time`,`end_time`,`need_code` FROM `wl_vote` WHERE `uuid` = ? LIMIT 1', [$uuid]);
+		$now = strtotime(date('Y-m-d', time()));
 		if(!isset($vote[0])){
 			return '404';
+		}else if($vote[0]['start_time'] > $now || $vote[0]['end_time'] < $now){
+			$this->assign('notice', "layer.open({shade: [0.8, '#393D49'],closeBtn: false,scrollbar: false,content: '该投票/问卷不在有效时限内',shift: 6,time: 0,maxWidth: 260,btn: ['确定'],yes: function(index){layer.close(index);layer.load(2);location.href = '".config('site_root')."/vote';}});return;");
+		}else{
+			$this->assign('notice', '');
 		}
 		$vote = $vote[0];
 		$vote['created'] = date('Y-m-d', $vote['created']);
