@@ -95,7 +95,7 @@ class Index extends Controller {
 			// $res = Db::query('SELECT * FROM `wl_vote_invitation` WHERE `vid` = (SELECT `id` FROM `wl_vote` WHERE `uuid` = ? LIMIT 1) AND `code` = ?', [$uuid, $inv]);
 			$res = Db::query('SELECT * FROM `wl_vote` WHERE `uuid` = ?', [$uuid]);
 			$flag = true;
-			if(isset($res[0]) && $res[0]['need_code']===1){
+			if(isset($res[0]) && $res[0]['need_code']==1){
 				$res = Db::query('SELECT * FROM `wl_vote_invitation` WHERE `vid` = ? AND `code` = ? AND `used` = 0', [$res[0]['id'], $inv]);
 				$flag = isset($res[0]) ? true: false;
 			}else if(!isset($res[0])){
