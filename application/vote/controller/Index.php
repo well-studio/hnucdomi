@@ -10,7 +10,7 @@ class Index extends Controller {
 		if (!Request::instance()->isMobile()) return '本网页没有电脑版哦~~';
 		$this->assign('option', json_decode(file_get_contents(__DIR__.'/../../../config/option.conf'), true));
 		$now = strtotime(date('Y-m-d', time()));
-		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC', [$now, $now]);
+		$res = Db::query('SELECT * FROM `wl_vote` WHERE `start_time` <= ? AND `end_time` >= ? ORDER BY `end_time` ASC,`id` ASC', [$now, $now]);
 		foreach($res as &$v){
 			if ($v['need_code'] == 1) {
 				$v['name'] .= ' <span class="am-badge am-badge-primary">邀</span>';

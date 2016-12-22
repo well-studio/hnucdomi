@@ -53,9 +53,9 @@ class Vote extends Controller {
 			$vote_item_option[$v['iid']]['description'] = $v['description'];
 			$vote_item_option[$v['iid']]['limit_count'] = $v['limit_count'];
 			$tempArr = [
-				'oid' => $v['oid'],
-				'content' => $v['content'],
-				'count' => $v['cnt']
+			'oid' => $v['oid'],
+			'content' => $v['content'],
+			'count' => $v['cnt']
 			];
 /*			if ($v['limit_count'] == 1) {
 				$vote_item_option[$v['iid']]['description'] .= ' <small>（单选）</small>';
@@ -133,7 +133,104 @@ class Vote extends Controller {
 		}
 		return $this->success('修改成功');
 	}
-	function invitations_submit(){
+
+	public function import_vote(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+		if(!preg_match('/^.+(\.xls|\.xlsx)$/', $_FILES['file']['name'], $res)){
+			return $this->error('文件类型错误');
+		}
+		$reader = null;
+		vendor('Excel.PHPExcel.IOFactory');
+		if($res[1] === '.xls'){
+			$reader = \PHPExcel_IOFactory::createReader('Excel5');
+		}else{
+			$reader = \PHPExcel_IOFactory::createReader('Excel2007');
+		}
+
+		$ex = $reader->load($_FILES['file']['tmp_name']);
+		$st = $ex->getSheet(0);
+		$highestRow = $st->getHighestRow(); // 取得总行数
+		$now = time();
+		$start_time = strtotime(date('Y-m-d'));
+		$end_time = strtotime(date('Y-m-d', $now+24*60*60*10));
+		for ($row = 2; $row <= $highestRow; $row++){
+			$name = $st->getCellByColumnAndRow(0, $row)->getValue();
+			if(is_null($name)) continue;
+			$invsCnt = $st->getCellByColumnAndRow(1, $row)->getValue();
+			Db::table('wl_vote')->insert([
+				'name' => $name,
+				'uuid' => substr(md5(time().microtime(true).rand().$name), 8, 16),
+				'need_code' => 1,
+				'created' => $now,
+				'start_time' => $start_time,
+				'end_time' => $end_time
+				]);
+
+			$vote_tmp = Db::query('SELECT `id` FROM `wl_vote` ORDER BY `id` DESC LIMIT 1');
+			$invs_tmp = $this->invitations_generator(6, $invsCnt);
+			$invs = [];
+			for($i=0; $i<$invsCnt; $i++){
+				$invs[] = [
+				'code' => $invs_tmp[$i],
+				'created' => $now,
+				'vid' => $vote_tmp[0]['id'],
+				'used' => 0,
+				'note' => $name
+				];
+			}
+			Db::table('wl_vote_invitation')->insertAll($invs);
+
+			$item_description = $st->getCellByColumnAndRow(2, $row)->getValue();
+			Db::table('wl_vote_item')->insert([
+				'vid' => $vote_tmp[0]['id'],
+				'description' => $item_description,
+				'limit_count' => 1
+				]);
+
+			$options = [];
+			$item_tmp = Db::query('SELECT `id` FROM `wl_vote_item` ORDER BY `id` DESC LIMIT 1');
+			for($i=0; $i<4; $i++){
+				$options[] = [
+				'iid' => $item_tmp[0]['id'],
+				'content' => $st->getCellByColumnAndRow(3+$i, $row)->getValue(),
+				'cnt' => 0
+				];
+			}
+			Db::table('wl_vote_option')->insertAll($options);
+		}
+		return $this->success('导入成功');
+		// var_dump($_FILES);
+	}
+
+	protected function invitations_generator($len = 6, $num=30){
+		$str = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+		$cnt_sub_1 = strlen($str)-1;
+		$ret = [];
+		for($j=0; $j<$num; $j++){
+			$inv = '';
+			for($i=0; $i<$len; $i++){
+				$inv .= $str{rand(0, $cnt_sub_1)};
+			}
+			$ret[] = str_shuffle($inv);
+		}
+		return $ret;
+	}
+
+	public function del_vote_all(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+		$id = (int)(input('post.id'));
+		Db::execute('DELETE FROM `wl_vote_invitation`');
+		Db::execute('DELETE FROM `wl_vote_option`');
+		Db::execute('DELETE FROM `wl_vote_item`');
+		Db::execute('DELETE FROM `wl_vote`');
+		return ['err' => 0, 'msg' => '删除成功'];
+	}
+
+	public function invitations_submit(){
 		if(Session::get('admin') !== 'zzliux'){
 			$this->redirect('admin/u/login');
 		}
@@ -154,6 +251,34 @@ class Vote extends Controller {
 			}
 		}
 		return $this->success('导入完成，成功'.$successNum.'条，失败'.$failNum.'条');
+	}
+
+	public function invitations_export(){
+		if(Session::get('admin') !== 'zzliux'){
+			$this->redirect('admin/u/login');
+		}
+		vendor('Excel.PHPExcel.PHPExcel');
+		vendor('Excel.PHPExcel.IOFactory');
+		$ob = new \PHPExcel();
+		$ob->setActiveSheetIndex(0)
+			->setCellValue('A1', '#')
+			->setCellValue('B1', '邀请码')
+			->setCellValue('C1', '备注')
+			->setCellValue('D1', '使用情况');
+		$arr = Db::query('SELECT * FROM `wl_vote_invitation`');
+		for($i=0,$len=count($arr); $i<$len; $i++){
+			$ob->setActiveSheetIndex(0)
+			->setCellValue('A'.($i+2), $i+1)
+			->setCellValue('B'.($i+2), $arr[$i]['code'])
+			->setCellValue('C'.($i+2), $arr[$i]['note'])
+			->setCellValue('D'.($i+2), $arr[$i]['used']==0?'未使用':'使用时间: '.date('Y-m-d H:i:s', $arr[$i]['used']));
+		}
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="invitations_exports.xlsx"');
+		header('Cache-Control: max-age=0');
+		$objWriter = \PHPExcel_IOFactory::createWriter($ob, 'Excel2007');
+		$objWriter->save('php://output');
+
 	}
 }
 ?>

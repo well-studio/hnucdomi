@@ -60,7 +60,7 @@
           <div class="am-u-md-3">
             <div class="am-panel am-panel-default">
               <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-1'}">新建投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse am-in" id="collapse-panel-1">
+              <div class="am-panel-bd am-collapse" id="collapse-panel-1">
                 <form class="am-form" action="{:config('site_root')}/admin/vote/create" method="post">
                   <div class="am-form-group">
                     <label for="cre_name" class="am-form-label">投票名称</label>
@@ -87,7 +87,7 @@
           <div class="am-u-md-9">
             <div class="am-panel am-panel-default">
               <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-2'}">已发起的投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse am-in" id="collapse-panel-2">
+              <div class="am-panel-bd am-collapse" id="collapse-panel-2">
                 <table class="am-table am-table-bordered">
                   <tr>
                     <th>#</th>
@@ -126,7 +126,7 @@
             <div class="am-panel am-panel-default">
                 <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-4'}">邀请码生成器<span class="am-icon-chevron-down am-fr" ></span></div>
                 <!-- .am-in最后要删掉，留着方便调试 -->
-                <div class="am-panel-bd am-collapse am-in" id="collapse-panel-4">
+                <div class="am-panel-bd am-collapse" id="collapse-panel-4">
                   <form class="am-form" action="{:config('site_root')}/admin/vote/invitations_submit" method="post">
                     <div class="am-g">
                       <div class="am-u-md-6">
@@ -168,6 +168,40 @@
             </div>
           </div>
           <!-- vote invitation generator module end -->
+
+          <!-- vote imoprt module start -->
+          <div class="am-u-md-6">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-5'}">投票批量导入<span class="am-icon-chevron-down am-fr" ></span></div>
+              <div class="am-panel-bd am-collapse" id="collapse-panel-5">
+                <form id="vote_improt" class="am-form" method="post" action="{:config('site_root')}/admin/vote/import_vote" enctype="multipart/form-data">
+                  <div class="am-form-group">
+                    <input type="file" accept=".xls,.xlsx" name="file">
+                  </div>
+                  <div class="am-form-group">
+                    <input type="submit" class="am-btn am-btn-secondary" id="improt_btn" value="提交">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="am-u-md-3">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-6'}">删除所有投票<span class="am-icon-chevron-down am-fr" ></span></div>
+              <div class="am-panel-bd am-collapse" id="collapse-panel-6">
+                <button id="del_vote_all" class="am-btn am-btn-danger am-btn-block">删除!</button>
+              </div>
+            </div>
+          </div>
+          <div class="am-u-md-3">
+            <div class="am-panel am-panel-default">
+              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-7'}">导出邀请码到Excel<span class="am-icon-chevron-down am-fr" ></span></div>
+              <div class="am-panel-bd am-collapse" id="collapse-panel-7">
+                <a target="_blank" href="{:config('site_root')}/admin/vote/invitations_export" class="am-btn am-btn-success am-btn-block">导出</a>
+              </div>
+            </div>
+          </div>
+          <!-- vote import module end -->
         </div>
       </div>
       <footer class="am-footer am-footer-default">
@@ -359,7 +393,7 @@
               layer.msg(data.msg);
               setTimeout(function(){
                 $('#v_' + id).hide();
-              }, 1000);
+              }, 100);
             },
             error: function(){
               layer.close(layId);
@@ -381,6 +415,28 @@
       }
       $('#invitations').val($('#invitations').val() + str_append);
     }
+    $('#improt_btn').bind('click', function(){
+      $('#improt_btn').attr("disabled","disabled");
+      layer.load(2);
+      $('#vote_improt').submit();
+      return false;
+    });
+    $('#del_vote_all').bind('click', function(){
+      layer.msg('确定删除？', {
+        shift: 6,
+        time: 0,
+        btn: ['确定', '取消'],
+        yes: function(index){
+          layer.close(index);
+          layer.load(2);
+          $.post('{:config('site_root')}/admin/vote/del_vote_all', {
+            'del': true
+          }, function(){
+            history.go(0);
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
