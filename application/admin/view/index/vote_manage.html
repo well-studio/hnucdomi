@@ -1,332 +1,316 @@
 <!DOCTYPE html>
 <html>
 <head>
-  {include file="common/head"}
-  <title>后台管理</title>
+	{include file="common/head"}
+	<title>后台管理</title>
 </head>
 <style>
-  .showDetailBox {
-    min-width: 800px;
-  }
+	.showDetailBox {
+		min-width: 800px;
+	}
 </style>
 <body>
 
-  {include file="common/nav"}
+	{include file="common/nav"}
 
+	<div class="am-cf admin-main">
+		{include file="common/sidebar"}
+		<div class="admin-content">
+			<div class="admin-content-body">
+				<div class="am-cf am-padding">
+				<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 投票管理 </strong></div>
+				</div>
+				<div class="am-g">
+					<!-- change vote module start -->
+					<div class="am-u-md-12" style="display:none" id="cha_vote_box">
+						<div class="am-panel am-panel-default">
+						<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-3'}">修改投票<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse am-in" id="collapse-panel-3">
+								<form class="am-form" action="{:config('site_root')}/admin/vote/change" method="post">
+									<div class="am-g">
+										<div class="am-form-group am-u-md-12">
+											<label for="cha_name" class="am-form-label">投票名称</label>
+											<input type="text" id="cha_name" name="cha_name" value="" placeholder="投票名称" required>
+										</div>
+										<div class="am-form-group am-u-md-4">
+											<label for="cha_start_time">开始日期</label>
+											<input type="date" id="cha_start_time" name="cha_start_time" placeholder="投票开始日期" required>
+										</div>
+										<div class="am-form-group am-u-md-4">
+											<label for="cha_end_time">结束日期</label>
+											<input type="date" id="cha_end_time" name="cha_end_time" placeholder="投票结束日期" required>
+										</div>
+										<div class="am-form-group am-u-md-4">
+											<label for="cha_end_time">是否需要邀请码</label>
+											<input type="checkbox" id="cha_need_code" name="cha_need_code" value="1">
+										</div>
+										<div class="am-u-sm-12"><div class="am-g" id="cha_append_box"></div></div>
+										<div class="am-form-group am-u-md-12">
+											<input type="submit" value="修改这个投票" class="am-btn am-btn-primary am-btn-block">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- change vote module end -->
 
-  <div class="am-cf admin-main">
-    {include file="common/sidebar"}
-    <div class="admin-content">
-      <div class="admin-content-body">
-        <div class="am-cf am-padding">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"> <h1>功能</h1> / 投票管理 </strong></div>
-        </div>
-        <div class="am-g">
-          <!-- change vote module start -->
-          <div class="am-u-md-12" style="display:none" id="cha_vote_box">
-            <div class="am-panel am-panel-default">
-            <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-3'}">修改投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse am-in" id="collapse-panel-3">
-                <form class="am-form" action="{:config('site_root')}/admin/vote/change" method="post">
-                  <div class="am-g">
-                    <div class="am-form-group am-u-md-12">
-                      <label for="cha_name" class="am-form-label">投票名称</label>
-                      <input type="text" id="cha_name" name="cha_name" value="" placeholder="投票名称" required>
-                    </div>
-                    <div class="am-form-group am-u-md-4">
-                      <label for="cha_start_time">开始日期</label>
-                      <input type="date" id="cha_start_time" name="cha_start_time" placeholder="投票开始日期" required>
-                    </div>
-                    <div class="am-form-group am-u-md-4">
-                      <label for="cha_end_time">结束日期</label>
-                      <input type="date" id="cha_end_time" name="cha_end_time" placeholder="投票结束日期" required>
-                    </div>
-                    <div class="am-form-group am-u-md-4">
-                      <label for="cha_end_time">是否需要邀请码</label>
-                      <input type="checkbox" id="cha_need_code" name="cha_need_code" value="1">
-                    </div>
-                    <div class="am-u-sm-12"><div class="am-g" id="cha_append_box"></div></div>
-                    <div class="am-form-group am-u-md-12">
-                      <input type="submit" value="修改这个投票" class="am-btn am-btn-primary am-btn-block">
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <!-- change vote module end -->
+					<!-- new vote module start -->
+					<div class="am-u-md-3">
+						<div class="am-panel am-panel-default">
+							<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-1'}">新建投票<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse" id="collapse-panel-1">
+								<form class="am-form" action="{:config('site_root')}/admin/vote/create" method="post">
+									<div class="am-form-group">
+										<label for="cre_name" class="am-form-label">投票名称</label>
+										<input type="text" id="cre_name" name="cre_name" value="" placeholder="投票名称" required>
+									</div>
+									<div class="am-form-group">
+										<label for="cre_start_time">开始日期</label>
+										<input type="date" id="cre_start_time" name="cre_start_time" placeholder="投票开始日期" required>
+									</div>
+									<div class="am-form-group">
+										<label for="cre_end_time">结束日期</label>
+										<input type="date" id="cre_end_time" name="cre_end_time" placeholder="投票结束日期" required>
+									</div>
+									<div class="am-form-group">
+										<input type="submit" value="创建新的投票" class="am-btn am-btn-primary am-btn-block">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- new vote module end -->
 
-          <!-- new vote module start -->
-          <div class="am-u-md-3">
-            <div class="am-panel am-panel-default">
-              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-1'}">新建投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse" id="collapse-panel-1">
-                <form class="am-form" action="{:config('site_root')}/admin/vote/create" method="post">
-                  <div class="am-form-group">
-                    <label for="cre_name" class="am-form-label">投票名称</label>
-                    <input type="text" id="cre_name" name="cre_name" value="" placeholder="投票名称" required>
-                  </div>
-                  <div class="am-form-group">
-                    <label for="cre_start_time">开始日期</label>
-                    <input type="date" id="cre_start_time" name="cre_start_time" placeholder="投票开始日期" required>
-                  </div>
-                  <div class="am-form-group">
-                    <label for="cre_end_time">结束日期</label>
-                    <input type="date" id="cre_end_time" name="cre_end_time" placeholder="投票结束日期" required>
-                  </div>
-                  <div class="am-form-group">
-                    <input type="submit" value="创建新的投票" class="am-btn am-btn-primary am-btn-block">
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <!-- new vote module end -->
+					<!-- vote list module start -->
+					<div class="am-u-md-9">
+						<div class="am-panel am-panel-default">
+							<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-2'}">已发起的投票<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse" id="collapse-panel-2">
+								<table class="am-table am-table-bordered">
+									<tr>
+										<th>#</th>
+										<th>投票名称</th>
+										<th>创建时间</th>
+										<th>投票开始时间</th>
+										<th>投票结束时间</th>
+										<th>操作</th>
+									</tr>
+									{for start="0" end="count($vote)" comparison="<" step="1" name="i"}
+										<tr id="v_{$vote[$i]['id']}"><td>{$vote[$i]['id']}</td><td>{$vote[$i]['name']}</td><td>{:date('Y-m-d', $vote[$i]['created'])}</td><td>{:date('Y-m-d', $vote[$i]['start_time'])}</td><td>{:date('Y-m-d', $vote[$i]['end_time'])}</td><td><button class="am-btn am-btn-default" onclick="alertUrl('{$vote[$i]['uuid']}')">链接</button><button class="am-btn am-btn-primary" onclick="showDetail('{$vote[$i]['id']}')">查看</button><button class="am-btn am-btn-danger" onclick="deleteVote('{$vote[$i]['id']}')">删除</button><button class="am-btn am-btn-success" onclick="showChangeVote('{$vote[$i]['id']}')">修改</button>{if condition="($vote[$i]['need_code'] == 1)"}<button class="am-btn am-btn-secondary" onclick="showInvitations('{$vote[$i]['id']}')">邀请码</button>{/if}</td></tr>
+									{/for}
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- vote list module end -->
 
-          <!-- vote list module start -->
-          <div class="am-u-md-9">
-            <div class="am-panel am-panel-default">
-              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-2'}">已发起的投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse" id="collapse-panel-2">
-                <table class="am-table am-table-bordered">
-                  <tr>
-                    <th>#</th>
-                    <th>投票名称</th>
-                    <th>创建时间</th>
-                    <th>投票开始时间</th>
-                    <th>投票结束时间</th>
-                    <th>操作</th>
-                  </tr>
-                  {for start="0" end="count($vote)" comparison="<" step="1" name="i"}
-                    <tr id="v_{$vote[$i]['id']}">
-                      <td>{$vote[$i]['id']}</td>
-                      <td>{$vote[$i]['name']}</td>
-                      <td>{:date('Y-m-d', $vote[$i]['created'])}</td>
-                      <td>{:date('Y-m-d', $vote[$i]['start_time'])}</td>
-                      <td>{:date('Y-m-d', $vote[$i]['end_time'])}</td>
-                      <td>
-                        <button class="am-btn am-btn-default" onclick="alertUrl('{$vote[$i]['uuid']}')">链接</button>
-                        <button class="am-btn am-btn-primary" onclick="showDetail('{$vote[$i]['id']}')">查看</button>
-                        <button class="am-btn am-btn-danger" onclick="deleteVote('{$vote[$i]['id']}')">删除</button>
-                        <button class="am-btn am-btn-success" onclick="showChangeVote('{$vote[$i]['id']}')">修改</button>
-                        {if condition="($vote[$i]['need_code'] == 1)"}
-                        <button class="am-btn am-btn-secondary" onclick="showInvitations('{$vote[$i]['id']}')">邀请码</button>
-                        {/if}
-                      </td>
-                    </tr>
-                  {/for}
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- vote list module end -->
+					<!-- vote invitation generator module start -->
+					<div class="am-u-md-12">
+						<div class="am-panel am-panel-default">
+								<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-4'}">邀请码生成器<span class="am-icon-chevron-down am-fr" ></span></div>
+								<!-- .am-in最后要删掉，留着方便调试 -->
+								<div class="am-panel-bd am-collapse" id="collapse-panel-4">
+									<form class="am-form" action="{:config('site_root')}/admin/vote/invitations_submit" method="post">
+										<div class="am-g">
+											<div class="am-u-md-6">
+												<div class="am-form-group">
+													<label class="am-form-label">输出</label>
+													<textarea name="invitations" id="invitations" rows="15"></textarea>
+												</div>
+											</div>
+											<div class="am-u-md-6">
+												<p>配置</p>
+												<div class="am-form-group">
+													<label class="am-form-label">单条长度</label>
+													<input type="number" id="invitations_length" value="6">
+												</div>
+												<div class="am-form-group">
+													<label class="am-form-label">生成条数</label>
+													<input type="number" id="invitations_num" value="20">
+												</div>
+												<div class="am-form-group">
+													<label class="am-form-label">关联投票</label>
+													<select id="invitations_relation">
+													{for start="0" end="count($vote)" comparison="<" step="1" name="i"}
+														{if condition="($vote[$i]['need_code'] == 1)"}<option value="{$vote[$i]['id']}">{$vote[$i]['name']}</option>{/if}
+													{/for}
+													</select>
+												</div>
+												<div class="am-form-group">
+													<label class="am-form-label">备注</label>
+													<input type="text" id="invitations_note" value="" placeholder="可以写班级，比如说'软件1502'，也可以留空">
+												</div>
+											</div>
+										</div>
+										<a class="am-btn am-btn-primary" href="javascript:generate()">生成</a>
+										<input type="submit" class="am-btn am-btn-success" value="导入数据库">
+									</form>
+								</div>
+						</div>
+					</div>
+					<!-- vote invitation generator module end -->
 
-          <!-- vote invitation generator module start -->
-          <div class="am-u-md-12">
-            <div class="am-panel am-panel-default">
-                <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-4'}">邀请码生成器<span class="am-icon-chevron-down am-fr" ></span></div>
-                <!-- .am-in最后要删掉，留着方便调试 -->
-                <div class="am-panel-bd am-collapse" id="collapse-panel-4">
-                  <form class="am-form" action="{:config('site_root')}/admin/vote/invitations_submit" method="post">
-                    <div class="am-g">
-                      <div class="am-u-md-6">
-                        <div class="am-form-group">
-                          <label class="am-form-label">输出</label>
-                          <textarea name="invitations" id="invitations" rows="15"></textarea>
-                        </div>
-                      </div>
-                      <div class="am-u-md-6">
-                        <p>配置</p>
-                        <div class="am-form-group">
-                          <label class="am-form-label">单条长度</label>
-                          <input type="number" id="invitations_length" value="6">
-                        </div>
-                        <div class="am-form-group">
-                          <label class="am-form-label">生成条数</label>
-                          <input type="number" id="invitations_num" value="20">
-                        </div>
-                        <div class="am-form-group">
-                          <label class="am-form-label">关联投票</label>
-                          <select id="invitations_relation">
-                          {for start="0" end="count($vote)" comparison="<" step="1" name="i"}
-                            {if condition="($vote[$i]['need_code'] == 1)"}
-                            <option value="{$vote[$i]['id']}">{$vote[$i]['name']}</option>
-                            {/if}
-                          {/for}
-                          </select>
-                        </div>
-                        <div class="am-form-group">
-                          <label class="am-form-label">备注</label>
-                          <input type="text" id="invitations_note" value="" placeholder="可以写班级，比如说'软件1502'，也可以留空">
-                        </div>
-                      </div>
-                    </div>
-                    <a class="am-btn am-btn-primary" href="javascript:generate()">生成</a>
-                    <input type="submit" class="am-btn am-btn-success" value="导入数据库">
-                  </form>
-                </div>
-            </div>
-          </div>
-          <!-- vote invitation generator module end -->
+					<!-- vote imoprt module start -->
+					<div class="am-u-md-6">
+						<div class="am-panel am-panel-default">
+							<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-5'}">投票批量导入<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse" id="collapse-panel-5">
+								<form id="vote_improt" class="am-form" method="post" action="{:config('site_root')}/admin/vote/import_vote" enctype="multipart/form-data">
+									<div class="am-form-group">
+										<input type="file" accept=".xls,.xlsx" name="file">
+									</div>
+									<div class="am-form-group">
+										<input type="submit" class="am-btn am-btn-secondary" id="improt_btn" value="提交">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="am-u-md-3">
+						<div class="am-panel am-panel-default">
+							<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-6'}">删除所有投票<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse" id="collapse-panel-6">
+								<button id="del_vote_all" class="am-btn am-btn-danger am-btn-block">删除!</button>
+							</div>
+						</div>
+					</div>
+					<div class="am-u-md-3">
+						<div class="am-panel am-panel-default">
+							<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-7'}">导出邀请码到Excel<span class="am-icon-chevron-down am-fr" ></span></div>
+							<div class="am-panel-bd am-collapse" id="collapse-panel-7">
+								<a target="_blank" href="{:config('site_root')}/admin/vote/invitations_export" class="am-btn am-btn-success am-btn-block">导出</a>
+							</div>
+						</div>
+					</div>
+					<!-- vote import module end -->
+				</div>
+			</div>
+			<footer class="am-footer am-footer-default">
+				<div class="am-footer-miscs">
+					<p>由维尔创业工作室提供技术支持</p>
+				</div>
+			</footer>
+		</div>
+	</div>
+	{include file="common/footer"/}
+	<script src="{:config('site_root')}/public/js/uuid.js"></script>
+	<script src="{:config('site_root')}/public/js/clipboard.js"></script>
+	<script>
+		$(function() {
+			$('#cre_start_time').datepicker();
+			$('#cre_end_time').datepicker();
+			$('#cha_start_time').datepicker();
+			$('#cha_end_time').datepicker();
+		});
+		function showDetail(vid){
+			getDetail(vid, function(data){
+				console.log(data);
+				var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>' + data.vote.name + '</h2></p>';
+				html += '<table class="am-table am-table-bordered">'
+				html += '<tr><th>#</th><th>题目/选项</th><th>票数</th></tr>';
+				for(var i=0; i<data.item.length; i++){
+					var description = data.item[i].description + (data.item[i].limit_count == 1 ? '<small> (单选)</small>' : ('<small> (限选'+data.item[i].limit_count+'个)</small>'));
+					html += '<tr class="am-active"><td>' + (i+1) + '</td><td>' + description + '</td><td></td></tr>';
+					for(var j=0; j<data.item[i].option.length; j++){
+						html += '<tr><td> </td><td>' + data.item[i].option[j].content + '</td><td>' + data.item[i].option[j].count + '</td></tr>';
+					}
+				}
 
-          <!-- vote imoprt module start -->
-          <div class="am-u-md-6">
-            <div class="am-panel am-panel-default">
-              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-5'}">投票批量导入<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse" id="collapse-panel-5">
-                <form id="vote_improt" class="am-form" method="post" action="{:config('site_root')}/admin/vote/import_vote" enctype="multipart/form-data">
-                  <div class="am-form-group">
-                    <input type="file" accept=".xls,.xlsx" name="file">
-                  </div>
-                  <div class="am-form-group">
-                    <input type="submit" class="am-btn am-btn-secondary" id="improt_btn" value="提交">
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="am-u-md-3">
-            <div class="am-panel am-panel-default">
-              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-6'}">删除所有投票<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse" id="collapse-panel-6">
-                <button id="del_vote_all" class="am-btn am-btn-danger am-btn-block">删除!</button>
-              </div>
-            </div>
-          </div>
-          <div class="am-u-md-3">
-            <div class="am-panel am-panel-default">
-              <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-7'}">导出邀请码到Excel<span class="am-icon-chevron-down am-fr" ></span></div>
-              <div class="am-panel-bd am-collapse" id="collapse-panel-7">
-                <a target="_blank" href="{:config('site_root')}/admin/vote/invitations_export" class="am-btn am-btn-success am-btn-block">导出</a>
-              </div>
-            </div>
-          </div>
-          <!-- vote import module end -->
-        </div>
-      </div>
-      <footer class="am-footer am-footer-default">
-        <div class="am-footer-miscs">
-          <p>由维尔创业工作室提供技术支持</p>
-        </div>
-      </footer>
-    </div>
-  </div>
-  {include file="common/footer"/}
-  <script src="{:config('site_root')}/public/js/uuid.js"></script>
-  <script src="{:config('site_root')}/public/js/clipboard.js"></script>
-  <script>
-    $(function() {
-      $('#cre_start_time').datepicker();
-      $('#cre_end_time').datepicker();
-      $('#cha_start_time').datepicker();
-      $('#cha_end_time').datepicker();
-    });
-    function showDetail(vid){
-      getDetail(vid, function(data){
-        console.log(data);
-        var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>' + data.vote.name + '</h2></p>';
-        html += '<table class="am-table am-table-bordered">'
-        html += '<tr><th>#</th><th>题目/选项</th><th>票数</th></tr>';
-        for(var i=0; i<data.item.length; i++){
-          var description = data.item[i].description + (data.item[i].limit_count == 1 ? '<small> (单选)</small>' : ('<small> (限选'+data.item[i].limit_count+'个)</small>'));
-          html += '<tr class="am-active"><td>' + (i+1) + '</td><td>' + description + '</td><td></td></tr>';
-          for(var j=0; j<data.item[i].option.length; j++){
-            html += '<tr><td> </td><td>' + data.item[i].option[j].content + '</td><td>' + data.item[i].option[j].count + '</td></tr>';
-          }
-        }
+				html += '</table></div>';
+				layer.open({
+					type: 1,
+					title: false,
+					closeBtn: 0,
+					shadeClose: true,
+					skin:'showDetailBox',
+					content: html
+				});
+			});
+		}
+		function alertUrl(uuid){
+			var protocol = location.href.substr(4, 1) === 's' ? 'https': 'http';
+			var url = protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid;
+			var opid = layer.open({
+				shade: [0.8, '#393D49'],
+				scrollbar: false,
+				title: '查看链接',
+				content: '<input type="text" id="gurl" value="' + url + '" style="width:100%">',
+				time: 0,
+				area: '500px',
+				btn: ['复制', '取消'],
+				yes: function(index){
+					new Clipboard('.layui-layer-btn0', {
+							text: function(trigger) {
+								layer.msg('复制成功');
+								return url;
+							}
+					});
+				},
+			});
+		}
+		function showInvitations(vid){
+			var layerId = layer.load(2);
+			$.ajax({
+				url:'{:config('site_root')}/admin/vote/detail_invitations',
+				method: 'post',
+				data: {
+					vid: vid
+				},
+				dataType: 'json',
+				success: function(data){
+					layer.close(layerId);
+					var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>邀请码详情</h2></p>';
+					html += '<table class="am-table am-table-bordered">'
+					html += '<tr><th>#</th><th>邀请码</th><th>备注</th><th>使用情况</th></tr>';
+					for(var i=0; i<data.length; i++){
+						var used;
+						if(data[i].used == 0){
+							used = '<span style="color:#dd514c">未使用</span>'
+						}else{
+							var date = new Date(data[i].used*1000);
+							used = '<span style="color:#5eb95e">使用时间：'+(date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds())+'</span>'
+						}
+						html += '<tr><td>' + (i+1) + '</td><td>' + data[i].code + '</td><td>'+data[i].note+'</td><td>'+used+'</td></tr>';
+					}
 
-        html += '</table></div>';
-        layer.open({
-          type: 1,
-          title: false,
-          closeBtn: 0,
-          shadeClose: true,
-          skin:'showDetailBox',
-          content: html
-        });
-      });
-    }
-    function alertUrl(uuid){
-      var protocol = location.href.substr(4, 1) === 's' ? 'https': 'http';
-      // layer.open({'content': protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid});
-      var url = protocol + '://{:config('domain')}{:config('site_root')}/vote/' + uuid;
-      var opid = layer.open({
-        shade: [0.8, '#393D49'],
-        scrollbar: false,
-        title: '查看链接',
-        content: '<input type="text" id="gurl" value="' + url + '" style="width:100%">',
-        time: 0,
-        area: '500px',
-        btn: ['复制', '取消'],
-        yes: function(index){
-          new Clipboard('.layui-layer-btn0', {
-              text: function(trigger) {
-                layer.msg('复制成功');
-                return url;
-              }
-          });
-        },
-      });
-    }
-    function showInvitations(vid){
-      var layerId = layer.load(2);
-      $.ajax({
-        url:'{:config('site_root')}/admin/vote/detail_invitations',
-        method: 'post',
-        data: {
-          vid: vid
-        },
-        dataType: 'json',
-        success: function(data){
-          layer.close(layerId);
-          var html = '<div style="margin-left:50px;margin-right:50px;"><p><h2>邀请码详情</h2></p>';
-          html += '<table class="am-table am-table-bordered">'
-          html += '<tr><th>#</th><th>邀请码</th><th>备注</th><th>使用情况</th></tr>';
-          for(var i=0; i<data.length; i++){
-            var used;
-            if(data[i].used == 0){
-              used = '<span style="color:#dd514c">未使用</span>'
-            }else{
-              var date = new Date(data[i].used*1000);
-              used = '<span style="color:#5eb95e">使用时间：'+(date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds())+'</span>'
-            }
-            html += '<tr><td>' + (i+1) + '</td><td>' + data[i].code + '</td><td>'+data[i].note+'</td><td>'+used+'</td></tr>';
-          }
-
-          html += '</table></div>';
-          layer.open({
-            type: 1,
-            title: false,
-            closeBtn: 0,
-            shadeClose: true,
-            skin:'showDetailBox',
-            content: html
-          });
-        },
-        error: function(){
-          layer.close(layerId);
-          layer.msg('网络错误');
-        }
-      });
-    }
-    function showAppendOption(iid, pos, btn_id){
-      $('#' + btn_id).attr('href', 'javascript:showAppendOption(' + iid + ',' + (pos+1) + ',\'' + btn_id + '\')');
-      $('#vote_option_append_field_' + iid).append('<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + iid + '_option_0[]" value="" placeholder="不填表示无该选项"></div>');
-    }
-    function showAppendOptionNew(posIid, pos, btn_id){
-      $('#' + btn_id).attr('href', 'javascript:showAppendOptionNew(' + posIid + ',' + (pos+1) + ',\'' + btn_id + '\')');
-      $('#vote_option_append_field_0_' + (posIid-1)).append('<label class="am-form-label am-u-sm-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-11"><input type="text" name="vote_item_' + posIid + '_option_0_' + (posIid) + '[]" value="" placeholder="不填表示无该选项"></div>');
-    }
-    function showAppendItem(pos){
-      $('#append_item_btn').attr('href', 'javascript: showAppendItem(' + (pos+1) + ')');
-      var html = '';
-      html += '<div class="am-u-sm-12"><hr></div><div class="am-form-group am-u-md-12"><div class="am-form-inline"><label class="am-u-sm-1">题目' + (pos+1) + ':</label><span class="am-u-sm-2" style="text-align:right;">允许最大多选数：</span><div class="am-form-group" style="width:50px;"><input type="number"" name="vote_item_limit_count_0_' + pos + '" value="1"></div></div>';
-      html += '<div class="am-form-set am-g" id="vote_item_0_box"><div class="am-u-sm-1" style="text-align:right">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_0_' + (pos+1) + '" value="" placeholder="不填表示无该题目，题目空选项也要留空"><div id="vote_option_append_field_0_' + pos + '" class="am-g"></div><div class="am-g"><div class="am-u-sm-offset-1 am-u-sm-11"><a class="am-btn am-btn-block am-btn-success" href="javascript:showAppendOptionNew(' + (pos+1) + ',0,\'btn_id_0_' + (pos+1) + '\')" id="btn_id_0_' + (pos+1) + '"><i class="am-icon-plus-circle" ></i>　选项</a></div></div>';
-      $('#vote_item_append_field').append(html);
-    }
-    function showChangeVote(id){
-      $('#cha_vote_box').show();
+					html += '</table></div>';
+					layer.open({
+						type: 1,
+						title: false,
+						closeBtn: 0,
+						shadeClose: true,
+						skin:'showDetailBox',
+						content: html
+					});
+				},
+				error: function(){
+					layer.close(layerId);
+					layer.msg('网络错误');
+				}
+			});
+		}
+		function showAppendOption(iid, pos, btn_id){
+			$('#' + btn_id).attr('href', 'javascript:showAppendOption(' + iid + ',' + (pos+1) + ',\'' + btn_id + '\')');
+			$('#vote_option_append_field_' + iid).append('<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + iid + '_option_0[]" value="" placeholder="不填表示无该选项"></div>');
+		}
+		function showAppendOptionNew(posIid, pos, btn_id){
+			$('#' + btn_id).attr('href', 'javascript:showAppendOptionNew(' + posIid + ',' + (pos+1) + ',\'' + btn_id + '\')');
+			$('#vote_option_append_field_0_' + (posIid-1)).append('<label class="am-form-label am-u-sm-1" style="text-align:right">选项' + (pos+1) + '</label><div class="am-u-sm-11"><input type="text" name="vote_item_' + posIid + '_option_0_' + (posIid) + '[]" value="" placeholder="不填表示无该选项"></div>');
+		}
+		function showAppendItem(pos){
+			$('#append_item_btn').attr('href', 'javascript: showAppendItem(' + (pos+1) + ')');
+			var html = '';
+			html += '<div class="am-u-sm-12"><hr></div><div class="am-form-group am-u-md-12"><div class="am-form-inline"><label class="am-u-sm-1">题目' + (pos+1) + ':</label><span class="am-u-sm-2" style="text-align:right;">允许最大多选数：</span><div class="am-form-group" style="width:50px;"><input type="number"" name="vote_item_limit_count_0_' + pos + '" value="1"></div></div>';
+			html += '<div class="am-form-set am-g" id="vote_item_0_box"><div class="am-u-sm-1" style="text-align:right">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_0_' + (pos+1) + '" value="" placeholder="不填表示无该题目，题目空选项也要留空"><div id="vote_option_append_field_0_' + pos + '" class="am-g"></div><div class="am-g"><div class="am-u-sm-offset-1 am-u-sm-11"><a class="am-btn am-btn-block am-btn-success" href="javascript:showAppendOptionNew(' + (pos+1) + ',0,\'btn_id_0_' + (pos+1) + '\')" id="btn_id_0_' + (pos+1) + '"><i class="am-icon-plus-circle" ></i>　选项</a></div></div>';
+			$('#vote_item_append_field').append(html);
+		}
+		function showChangeVote(id){
+      var tmpId = layer.load(2);
       getDetail(id, function(data){
+        layer.close(tmpId);
+        $('#cha_vote_box').show();
+        $('.admin-content').animate({scrollTop: '0px'}, 300);
         $('#cha_name').val(data.vote.name);
         $('#cha_start_time').datepicker('setValue', data.vote.start_time);
         $('#cha_end_time').datepicker('setValue', data.vote.end_time);
@@ -335,108 +319,110 @@
         }else{
           $('#cha_need_code').prop('checked', false);
         }
-        var item = data.item;
-        var html = '';
-        for(var i=0; i<item.length; i++){
-          html += '<div class="am-u-sm-12"><hr></div><div class="am-form-group am-u-md-12"><div class="am-form-inline"><label class="am-u-sm-1">题目' + (i+1) + ':</label><span class="am-u-sm-2" style="text-align:right;">允许最大多选数：</span><div class="am-form-group" style="width:50px;"><input type="number"" name="vote_item_limit_count_' + item[i].iid + '" value="' + item[i].limit_count + '"></div></div>'
-          html += '<div class="am-form-set am-g" id="vote_item_' + item[i].iid + '_box"><div class="am-u-sm-1" style="text-align:right">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_' + item[i].iid + '" value="' + item[i].description + '"></div>'
-          for(var j=0; j<item[i].option.length; j++){
-            html += '<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (j+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + item[i].iid + '_option_' + item[i].option[j].oid + '" value="' + item[i].option[j].content + '"></div>';
-          }
-          html += '<div id="vote_option_append_field_' + item[i].iid + '"></div><div class="am-u-sm-offset-2 am-u-sm-10"><a class="am-btn am-btn-block am-btn-success" href="javascript:showAppendOption(' + item[i].iid + ',' + item[i].option.length + ',\'btn_id_' + item[i].iid + '\')" id="btn_id_' + item[i].iid + '"><i class="am-icon-plus-circle" ></i>　选项</a></div></div></div>'
-        }
-        html += '<div class="am-u-sm-12"><div class="am-g" id="vote_item_append_field"></div><hr></div><div class="am-u-sm-offset-1 am-u-sm-11"><a href="javascript:showAppendItem(' + item.length + ')" class="am-btn am-btn-secondary am-btn-block" id="append_item_btn"><i class="am-icon-plus-circle" ></i>　题目</a></a></div><div class="am-u-sm-12"><br><hr></div>';
-        html += '<input type="hidden" name="vote_id" value="' + data.vote.id + '">'
-        $('#cha_append_box').html(html);
-      });
-    }
-    function getDetail(id, callback){
-      layId = layer.load(2);
-      $.ajax({
-        url:'{:config('site_root')}/admin/vote/detail',
-        method: 'post',
-        dataType: 'json',
-        data: {
-          id: id
-        },
-        success:function(data){
-          layer.close(layId);
-          callback(data);
-        },
-        error:function(){
-          layer.close(layId);
-          layer.msg('网络错误');
-        }
-      });
-    }
-    function deleteVote(id){
-      layer.msg('确定删除？', {
-        shift: 6,
-        time: 0,
-        btn: ['确定', '取消'],
-        yes: function(index){
-          layer.close(index);
-          var layId = layer.load(2);
-          $.ajax({
-            url: '{:config('site_root')}/admin/vote/delete',
-            method: 'post',
-            data: {
-              id: id
-            },
-            dataType: 'json',
-            success: function(data){
-              layer.close(layId);
-              if(data.err){
-                layer.msg(data.msg);
-                return;
-              }
-              layer.msg(data.msg);
-              setTimeout(function(){
-                $('#v_' + id).hide();
-              }, 100);
-            },
-            error: function(){
-              layer.close(layId);
-              layer.msg('网络错误');
-            }
-          });
-        }
-      });
-    }
-    var generate_times = 0;
-    function generate(){
-      var num = $('#invitations_num').val();
-      var len = $('#invitations_length').val();
-      var relationId = $('#invitations_relation').val();
-      var note = $('#invitations_note').val();
-      var str_append = '# ---- 第 ' + (++generate_times) + ' 次生成，共计 ' + num + ' 条记录，关联投票ID ' + relationId + '，备注 ' + note + " ------ #\n";
-      for(var i=0; i<num; i++){
-        str_append += Math.uuid(len) + "\t" + relationId + "\t" + note + "\n";
-      }
-      $('#invitations').val($('#invitations').val() + str_append);
-    }
-    $('#improt_btn').bind('click', function(){
-      $('#improt_btn').attr("disabled","disabled");
-      layer.load(2);
-      $('#vote_improt').submit();
-      return false;
-    });
-    $('#del_vote_all').bind('click', function(){
-      layer.msg('确定删除？', {
-        shift: 6,
-        time: 0,
-        btn: ['确定', '取消'],
-        yes: function(index){
-          layer.close(index);
-          layer.load(2);
-          $.post('{:config('site_root')}/admin/vote/del_vote_all', {
-            'del': true
-          }, function(){
-            history.go(0);
-          });
-        }
-      });
-    });
-  </script>
+        $('#collapse-panel-3').attr('class', 'am-panel-bd am-collapse am-in');
+        $('#collapse-panel-3').css({height: 'initial'});
+				var item = data.item;
+				var html = '';
+				for(var i=0; i<item.length; i++){
+					html += '<div class="am-u-sm-12"><hr></div><div class="am-form-group am-u-md-12"><div class="am-form-inline"><label class="am-u-sm-1">题目' + (i+1) + ':</label><span class="am-u-sm-2" style="text-align:right;">允许最大多选数：</span><div class="am-form-group" style="width:50px;"><input type="number"" name="vote_item_limit_count_' + item[i].iid + '" value="' + item[i].limit_count + '"></div></div>'
+					html += '<div class="am-form-set am-g" id="vote_item_' + item[i].iid + '_box"><div class="am-u-sm-1" style="text-align:right">描述</div><div class="am-u-sm-11"><input type="text" name="vote_item_' + item[i].iid + '" value="' + item[i].description + '"></div>'
+					for(var j=0; j<item[i].option.length; j++){
+						html += '<label class="am-form-label am-u-sm-1 am-u-sm-offset-1" style="text-align:right">选项' + (j+1) + '</label><div class="am-u-sm-10"><input type="text" name="vote_item_' + item[i].iid + '_option_' + item[i].option[j].oid + '" value="' + item[i].option[j].content + '"></div>';
+					}
+					html += '<div id="vote_option_append_field_' + item[i].iid + '"></div><div class="am-u-sm-offset-2 am-u-sm-10"><a class="am-btn am-btn-block am-btn-success" href="javascript:showAppendOption(' + item[i].iid + ',' + item[i].option.length + ',\'btn_id_' + item[i].iid + '\')" id="btn_id_' + item[i].iid + '"><i class="am-icon-plus-circle" ></i>　选项</a></div></div></div>'
+				}
+				html += '<div class="am-u-sm-12"><div class="am-g" id="vote_item_append_field"></div><hr></div><div class="am-u-sm-offset-1 am-u-sm-11"><a href="javascript:showAppendItem(' + item.length + ')" class="am-btn am-btn-secondary am-btn-block" id="append_item_btn"><i class="am-icon-plus-circle" ></i>　题目</a></a></div><div class="am-u-sm-12"><br><hr></div>';
+				html += '<input type="hidden" name="vote_id" value="' + data.vote.id + '">'
+				$('#cha_append_box').html(html);
+			});
+		}
+		function getDetail(id, callback){
+			layId = layer.load(2);
+			$.ajax({
+				url:'{:config('site_root')}/admin/vote/detail',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					id: id
+				},
+				success:function(data){
+					layer.close(layId);
+					callback(data);
+				},
+				error:function(){
+					layer.close(layId);
+					layer.msg('网络错误');
+				}
+			});
+		}
+		function deleteVote(id){
+			layer.msg('确定删除？', {
+				shift: 6,
+				time: 0,
+				btn: ['确定', '取消'],
+				yes: function(index){
+					layer.close(index);
+					var layId = layer.load(2);
+					$.ajax({
+						url: '{:config('site_root')}/admin/vote/delete',
+						method: 'post',
+						data: {
+							id: id
+						},
+						dataType: 'json',
+						success: function(data){
+							layer.close(layId);
+							if(data.err){
+								layer.msg(data.msg);
+								return;
+							}
+							layer.msg(data.msg);
+							setTimeout(function(){
+								$('#v_' + id).hide();
+							}, 100);
+						},
+						error: function(){
+							layer.close(layId);
+							layer.msg('网络错误');
+						}
+					});
+				}
+			});
+		}
+		var generate_times = 0;
+		function generate(){
+			var num = $('#invitations_num').val();
+			var len = $('#invitations_length').val();
+			var relationId = $('#invitations_relation').val();
+			var note = $('#invitations_note').val();
+			var str_append = '# ---- 第 ' + (++generate_times) + ' 次生成，共计 ' + num + ' 条记录，关联投票ID ' + relationId + '，备注 ' + note + " ------ #\n";
+			for(var i=0; i<num; i++){
+				str_append += Math.uuid(len) + "\t" + relationId + "\t" + note + "\n";
+			}
+			$('#invitations').val($('#invitations').val() + str_append);
+		}
+		$('#improt_btn').bind('click', function(){
+			$('#improt_btn').attr("disabled","disabled");
+			layer.load(2);
+			$('#vote_improt').submit();
+			return false;
+		});
+		$('#del_vote_all').bind('click', function(){
+			layer.msg('确定删除？', {
+				shift: 6,
+				time: 0,
+				btn: ['确定', '取消'],
+				yes: function(index){
+					layer.close(index);
+					layer.load(2);
+					$.post('{:config('site_root')}/admin/vote/del_vote_all', {
+						'del': true
+					}, function(){
+						history.go(0);
+					});
+				}
+			});
+		});
+	</script>
 </body>
 </html>
